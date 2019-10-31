@@ -1,0 +1,1412 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container questionnaire-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper expansion">
+            <!-- 问卷 -->
+            <div class="questionnaire-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="goto_page_task();">
+                            <i class="icon-back"></i><span>取消</span>
+                        </div>
+                    </div>
+                    <div class="title" ng-show="MQExamPoint">{{MQExamPoint.mq_exampoint_no}}&nbsp;{{MQExamPoint.mq_exampoint_name}}-{{task_detail.ABBR_NAME}}</div>
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="goto_more_page('.questionnaire-wrapper')">
+                            <span>更多</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-header">
+                        <div class="cells w-100">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="d-flex justify-content-start align-items-center" style=" flex-grow: 1; ">
+                                        <div class="" style=" flex-grow: 0; ">
+                                            <div class="item-avatar" style="background-image: url({{task_detail.DOOR_PHOTO}})" ng-click="photo_preview_open($event)"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column" style=" flex-grow: 1; ">
+                                            <div class="d-flex justify-content-start text-center">
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-finished" style="color: #3dbdff;" ng-show="!!task_detail.finishedflag"></span><span class="icon-unfinished" style="color: #ff3d3d;" ng-show="!task_detail.finishedflag"></span></div>
+                                                    <div class="item-title">完成情况</div>
+                                                    <div class="item-value"><span ng-show="!!task_detail.finishedflag">已完成</span><span ng-show="!task_detail.finishedflag" style="color: #ff3d3d;">未完成</span></div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-abnormal" style="color: #ff3d3d;" ng-show="task_detail.STATUS == 0"></span><span class="icon-abnormal" ng-show="task_detail.STATUS == 1"></span></div>
+                                                    <div class="item-title">正常检查/异常检查</div>
+                                                    <div class="item-value"><span ng-show="task_detail.STATUS == 0" style="color: #ff3d3d;">异常</span><span ng-show="task_detail.STATUS == 1">正常</span></div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-percent"></span></div>
+                                                    <div class="item-title">问卷完成比例</div>
+                                                    <div class="item-value">{{task_detail.progress}}%（{{task_detail.FINISHEDCOUNT}} / {{task_detail.TOTALCOUNT}}）</div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-count"></span></div>
+                                                    <div class="item-title">当前题目</div>
+                                                    <div class="item-value">第{{task_detail.currentEp}}题（共{{task_detail.TOTALCOUNT}}题）</div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-exempt" ng-show="task_detail.exempt_num == 0"></span><span class="icon-exempt" ng-show="task_detail.exempt_num > 0" style="color: #ff3d3d;"></span></div>
+                                                    <div class="item-title">是否免检</div>
+                                                    <div class="item-value"><span ng-show="task_detail.exempt_num == 0">必检</span><span ng-show="task_detail.exempt_num > 0" style="color: #ff3d3d;">免检</span></div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-today" ng-show="task_detail.record_num == 0"></span><span class="icon-today" ng-show="task_detail.record_num > 0" style="color: #ff3d3d;"></span></div>
+                                                    <div class="item-title">经销商报备</div>
+                                                    <div class="item-value"><span ng-show="task_detail.record_num == 0">未报备</span><span ng-show="task_detail.record_num > 0" style="color: #ff3d3d;">已报备</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workspace-panel-body">
+                        <!-- 整体照片 -->
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>整体照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 85px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in questionnaire.questionnaire_photos" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '整体照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('整体照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('整体照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 照片判断 -->
+                        <div class="cells" ng-show="has_questionnaire_photos('true');">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="photos-thumb-panel justify-content-start">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in questionnaire.questionnaire_photos" repeat-photo ng-show="questionnaire_point[key].checkResult == '1'" ng-click="goto_mq_photos_check(photo, key)" ng-class="{true: 'isDefault', false: ''}[questionnaire_point[key].isDefault]">
+                                                        <img class="photo" src="{{photo}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="value flex-shrink-0">合格</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells" ng-repeat="item in MQExamPoint.mqexamstandardlist | orderBy:'orderby'" data-id="{{item.mq_exam_standard_id}}" ng-show="has_questionnaire_photos(item.standard_no);">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="photos-thumb-panel justify-content-start">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in questionnaire.questionnaire_photos" repeat-photo ng-show="questionnaire_point[key].checkResult == '0' && questionnaire_point[key].mqexamstandard.standard_no == item.standard_no"  ng-click="goto_mq_photos_check(photo, key)" ng-class="{true: 'isDefault', false: ''}[questionnaire_point[key].isDefault]">
+                                                        <img class="photo" src="{{photo}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="value flex-shrink-0">不合格&nbsp;{{item.standard_no}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-show="!!MQExamPoint.mq_module_name">
+                                    <div class="title">模块</div>
+                                    <div class="value">{{MQExamPoint.mq_module_no}}&nbsp;{{MQExamPoint.mq_module_name}}</div>
+                                </div>
+                                <div class="cell" ng-show="!!MQExamPoint.mq_checklist_name">
+                                    <div class="title">检查内容</div>
+                                    <div class="value">{{MQExamPoint.mq_checklist_no}}&nbsp;{{MQExamPoint.mq_checklist_name}}</div>
+                                </div>
+                                <div class="cell" ng-show="!!MQExamPoint.mq_exampoint_name">
+                                    <div class="title">考核点</div>
+                                    <div class="value pre-line text-right">{{MQExamPoint.mq_exampoint_no}}&nbsp;{{MQExamPoint.mq_exampoint_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">判断标准</div>
+                                    <div class="value pre-line text-right">{{MQExamPoint.mq_exampoint_standard}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells"><button id="submit_MQData_btn" type="button" class="btn btn-bg-theme btn-sm mt-0 mb-2 mx-auto d-block w500-btn" ng-click="submitMQData()">提交并进入下一题</button></div>
+                        <div class="cells" ng-show="task_detail.STATUS == 0||task_detail.exempt_num > 0"><button type="button" class="btn btn-bg-white color-red btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="getNextQuestion('MQ');"><strong>跳过并进入下一题</strong></button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 问卷 -->
+
+            <!-- 主问卷 照片判断 -->
+            <div class="task-questionnaire-photos-check-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="back_mq_photos_check();">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">照片判断</div>
+                    <div class="header-back-btn" ng-click="done_mq_photos_check();">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="cells">
+                        <!--div class="cells-title">照片{{curren_mq_photo_seq + 1}}</div-->
+                        <div class="cell-body">
+                            <div class="cell">
+                                <div class="title d-flex align-items-center justify-content-between photos-thumb-panel">
+                                    <div class="photos-thumb">
+                                        <div class="photo-box">
+                                            <img class="photo" src="{{curren_mq_photo}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="value d-flex align-items-center">
+                                    <div class="mr-2" ng-if="curren_mq_photo_checkResult == '1'">合格</div><div class="mr-2" ng-if="curren_mq_photo_checkResult == '0'">不合格</div><input type="checkbox" class="js-switch checkResult-switch" ng-checked="curren_mq_photo_checkResult == '1'" data-num="{{curren_mq_photo_seq}}">
+                                </div>
+                            </div>
+                            <div class="cell ng-scope">
+                                <div class="title d-flex align-items-center">是否默认照片（置顶）</div>
+                                <div class="value d-flex align-items-center">
+                                    <div class="mr-2" ng-if="curren_mq_photo_isDefault">是</div><div class="mr-2" ng-if="!curren_mq_photo_isDefault">否</div><input type="checkbox" class="js-switch isDefault-switch" ng-checked="curren_mq_photo_isDefault" data-num="{{curren_mq_photo_seq}}">
+                                </div>
+
+                            </div>
+                            <div class="cell" ng-if="curren_mq_photo_checkResult == '0'" ng-click="slide_page_go('.task-mqexamstandardlist-wrapper');set_current_point(curren_mq_photo_seq)">
+                                <div class="title d-flex align-items-center"><span class="color-danger pr-2">*</span>未达到原因</div>
+                                <div class="value d-flex align-items-center">{{questionnaire_point[curren_mq_photo_seq].mqexamstandard.standard_no}}&nbsp;{{questionnaire_point[curren_mq_photo_seq].mqexamstandard.standard}}</div>
+                                <div class="enter_btn"></div>
+                            </div>
+                            <div class="cell" ng-if="curren_mq_photo_checkResult == '0'" ng-click="slide_page_go('.task-remark-wrapper');set_current_point(curren_mq_photo_seq)">
+                                <div class="title d-flex align-items-center"><span class="color-danger pr-2">*</span>描述</div>
+                                <div class="value d-flex align-items-center">{{questionnaire_point[curren_mq_photo_seq].remark}}</div>
+                                <div class="enter_btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cells">
+                        <div class="cell-body">
+                            <div class="cell">
+                                <img src="{{curren_mq_photo}}" class="mx-auto">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 主问卷 照片判断 -->
+
+            <!-- 照片库 -->
+            <div class="task-photos-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back();">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">照片库</div>
+                    <div class="header-back-btn" ng-click="questionnaire_select_photos_btn('add');">
+                        <span>完成</span>
+                    </div>
+
+                </div>
+                <div class="workspace-panel">
+                    <div class="photo-gallery">
+                        <div ng-include="'widget/photos.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 照片库 -->
+
+            <!-- 判断标准详情 -->
+            <div class="task-mqstandardvalue-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">判断标准</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div>{{standard_value}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 判断标准详情 -->
+            <!-- 判断条款 -->
+            <div class="task-mqexamstandardlist-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.task-questionnaire-photos-check-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">选择未达到原因</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="examPoint in MQExamPoint.mqexamstandardlist" ng-click="slide_page_back('.task-questionnaire-photos-check-wrapper');set_mqexamstandard($index)" data-id="{{examPoint.mq_exam_standard_id}}">
+                                    <div class="title"><span class="mr-3">{{examPoint.standard_no}}</span><span>{{examPoint.standard}}</span></div>
+                                    <div class="value"><i class="icon-normal" style="color: #28a745;" ng-if="questionnaire_point[current_point].mqexamstandard.mq_exam_standard_id == examPoint.mq_exam_standard_id"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 判断条款 -->
+            <!-- 未达到原因 -->
+            <!--<div class="task-reason-wrapper slide slide-right">-->
+                <!--<div class="workspace-header">-->
+                    <!--<div class="workspace-wrapper-expansion">-->
+                        <!--<div class="header-back-btn" ng-click="slide_page_back('.questionnaire-wrapper')">-->
+                            <!--<i class="icon-back"></i><span>返回</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="title">填写原因</div>-->
+                    <!--<div class="header-back-btn" ng-click="slide_page_back('.questionnaire-wrapper');">-->
+                        <!--<span>完成</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="workspace-panel">-->
+                    <!--<div class="workspace-panel-body">-->
+                        <!--<div class="cells">-->
+                            <!--<div class="reason-panel textarea-panel">-->
+                                <!--<div class="cell-body">-->
+                                    <!--<textarea id="reason" ng-model="questionnaire_point[current_point].reason" placeholder="请填写原因"></textarea>-->
+                                    <!--&lt;!&ndash;<p class="restrictions m-0">50字</p>&ndash;&gt;-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!-- end 未达到原因 -->
+
+            <!-- 描述 -->
+            <div class="task-remark-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.task-questionnaire-photos-check-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">填写描述</div>
+                    <div class="header-back-btn" ng-click="slide_page_back('.task-questionnaire-photos-check-wrapper');">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="remark-panel textarea-panel">
+                                <div class="cell-body">
+                                    <textarea id="remark" ng-model="questionnaire_point[current_point].remark" placeholder="请填写描述"></textarea>
+                                    <!--<p class="restrictions m-0">50字</p>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 描述 -->
+
+            <!-- 子表 -->
+            <div class="questionnaire-sq-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="goto_page_task();">
+                            <i class="icon-back"></i><span>取消</span>
+                        </div>
+                    </div>
+                    <div class="title">{{sq.sqname}}-{{task_detail.ABBR_NAME}}</div>
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="goto_more_page('.questionnaire-sq-wrapper')">
+                            <span>更多</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-header">
+                        <div class="cells w-100">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="d-flex justify-content-start align-items-center" style=" flex-grow: 1; ">
+                                        <div class="" style=" flex-grow: 0; ">
+                                            <div class="item-avatar" style="background-image: url({{task_detail.DOOR_PHOTO}})" ng-click="photo_preview_open($event)"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column" style=" flex-grow: 1; ">
+                                            <div class="d-flex justify-content-start text-center">
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-abnormal" style="color: #ff3d3d;" ng-show="task_detail.STATUS == 0"></span><span class="icon-abnormal" ng-show="task_detail.STATUS == 1"></span></div>
+                                                    <div class="item-title">正常检查/异常检查</div>
+                                                    <div class="item-value"><span ng-show="task_detail.STATUS == 0" style="color: #ff3d3d;">异常</span><span ng-show="task_detail.STATUS == 1">正常</span></div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="" style="font-size: 22px;line-height: 1;">%</span></div>
+                                                    <div class="item-title">问卷完成比例</div>
+                                                    <div class="item-value">{{task_detail.progress}}%（{{task_detail.FINISHEDCOUNT}} / {{task_detail.TOTALCOUNT}}）</div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-count"></span></div>
+                                                    <div class="item-title">当前题目</div>
+                                                    <div class="item-value">第{{task_detail.currentEp}}题（共{{task_detail.TOTALCOUNT}}题）</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">子问卷</div>
+                                    <div class="value">{{sq.sqname}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body sqDataList">
+                                <div class="cell" ng-repeat="item in sqData" ng-click="sqCheck($index)">
+                                    <div class="title d-flex align-items-center"><i class="icon-warn" ng-if="!item.isChecked"></i><i class="icon-normal" ng-if="item.isChecked"></i><span class="ml-2">{{sqstrulist[sq_data_title_num].title}}</span><div ng-show="item.new" class="icon-new"></div></div>
+                                    <div class="value d-flex align-items-center justify-content-end" style=" width: 50%; display: flex; justify-content: flex-end; align-items: center; ">{{item[sq_data_title_id]}}<div class="del_newSQ_btn" ng-show="item.new" ng-click="delNewSQ($index)"></div></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells"><button type="button" class="btn btn-bg-white color-red btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="slide_page_go('.questionnaire-addSQ-wrapper')"><strong>添加</strong></button></div>
+                        <div class="cells"><button id="submit_SQData_btn" type="button" class="btn btn-bg-theme btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="submitSQData()">提交并进入下一题</button></div>
+                        <div class="cells" ng-show="task_detail.STATUS == 0"><button type="button" class="btn btn-bg-white color-red btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="getNextQuestion('SQ');"><strong>跳过并进入下一题</strong></button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 子表  -->
+
+            <!-- 子表 - 车辆检查 -->
+            <div class="questionnaire-sq-check-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-sq-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">子问卷数据检查-{{sq.sqname}}</div>
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="current_sq_checked();">
+                            <span>完成</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cells-title">基本内容</div>
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in sqstrulist" ng-if="item.type == 'base'">
+                                    <div class="title">{{item.title}}</div>
+                                    <div class="value">{{current_sq[item.id]}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cells-title">检查内容</div>
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in sqstrulist" ng-if="item.type == 'check'">
+                                    <div class="d-flex align-items-center justify-content-between w-100" ng-if="item.type == 'check' && item.checktype == 'text'" ng-click="goto_check_data_filed(item)">
+                                        <div class="title"><span ng-if="item.is_must == '1'"><span class="color-danger pr-2">*</span></span>{{item.title}}</div>
+                                        <div class="value">
+                                            <span>{{current_sq[item.id]}}</span>
+                                        </div>
+                                        <div class="enter_btn"></div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between w-100" ng-if="item.type == 'check' && item.checktype == 'radio'">
+                                        <div class="title d-flex align-items-center">{{item.title}}</div>
+                                        <div class="value d-flex align-items-center">
+                                            <div class="mr-2" ng-if="current_sq[item.id] == 'true'">是</div><div class="mr-2" ng-if="current_sq[item.id] == 'false'">否</div><input type="checkbox" class="js-switch" data-num="{{item.id}}" ng-checked="current_sq[item.id] == 'true'">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between w-100" ng-if="item.type == 'check' && item.checktype == 'scan'">
+                                        <div class="title">{{item.title}}</div>
+                                        <div class="value d-flex align-items-center justify-content-end">
+                                            <!--<span class="mr-2">{{current_sq_VIN_value}}</span>-->
+                                            <span class="mr-2" ng-show="photo_vin"><span class="loading checkVIN-loading"></span></span>
+                                            <span class="mr-3" ng-show="checkVIN == 'undefined' || checkVIN == 'false'" id="btn-photo-vin" ng-click="photo_btn();btn_photo_vin(item.id)"><span class="icon-scan"></span></span>
+                                            <span class="mr-2" ng-show="current_sq[item.id] == 'true'">是</span><span class="mr-2" ng-show="current_sq[item.id] == 'false'">否</span>
+                                            <input type="checkbox" class="js-switch" data-type="scan-vin" data-num="{{item.id}}" ng-checked="current_sq[item.id] == 'true'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>整体照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 85px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in current_sq.imageList" repeat-photo>
+                                                        <!--ng-click="photo_preview_open($event)"-->
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="goto_sq_photos_check(photo, key)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '车辆照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('车辆照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('车辆照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 照片判断 -->
+                        <div class="cells" ng-repeat="examPoint in sq.mqexampointlist | orderBy:'mq_exampoint_no'" data-id="{{examPoint.mq_exampoint_id}}" ng-show="has_sq_photos('true', examPoint.mq_exampoint_id)">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="photos-thumb-panel justify-content-start">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in current_sq.imageList" repeat-photo ng-show="sqCheckDataList[current_sq_index][key].checkResult == '1'" ng-if="examPoint.mq_exampoint_id == sqCheckDataList[current_sq_index][key].mqexamstandard.mq_exampoint_id" ng-click="goto_sq_photos_check(photo, key)" ng-class="{true: 'isDefault', false: ''}[questionnaire_point[key].isDefault]">
+                                                        <img class="photo" src="{{photo}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="value flex-shrink-0">合格&nbsp;{{examPoint.mq_exampoint_no}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells" ng-repeat="examPoint in sq.mqexamstandardlist | orderBy:'orderby'" data-id="{{examPoint.mq_exam_standard_id}}" ng-show="has_sq_photos(examPoint.mq_exam_standard_id)">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="photos-thumb-panel justify-content-start">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in current_sq.imageList" repeat-photo ng-show="sqCheckDataList[current_sq_index][key].checkResult == '0'" ng-if="examPoint.mq_exam_standard_id == sqCheckDataList[current_sq_index][key].clause.mq_exam_standard_id" ng-click="goto_sq_photos_check(photo, key)" ng-class="{true: 'isDefault', false: ''}[questionnaire_point[key].isDefault]">
+                                                        <img class="photo" src="{{photo}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="value flex-shrink-0">不合格&nbsp;{{examPoint.standard_no}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 子表 - 车辆检查 -->
+
+            <!-- 子表 - 照片判断 -->
+            <div class="task-sq-photos-check-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="back_sq_photos_check()">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">照片判断</div>
+                    <div class="header-back-btn" ng-click="done_sq_photos_check();">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title d-flex align-items-center justify-content-between photos-thumb-panel">
+                                        <div class="photos-thumb">
+                                            <div class="photo-box">
+                                                <img class="photo" src="{{curren_sq_photo}}" data-name="{{curren_sq_photo_seq}}" ng-click="photo_preview_open($event)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="value d-flex align-items-center">
+                                        <div class="mr-2" ng-if="curren_sq_photo_checkResult == '1'">合格</div>
+                                        <div class="mr-2" ng-if="curren_sq_photo_checkResult == '0'">不合格</div>
+                                        <input type="checkbox" class="js-switch" data-num="{{curren_sq_photo_seq}}" ng-checked="curren_sq_photo_checkResult == '1'">
+                                    </div>
+                                </div>
+                                <div class="cell" ng-click="slide_page_go('.task-sq-mqexampointlist-wrapper');set_current_point(curren_sq_photo_seq)">
+                                    <div class="title d-flex align-items-center"><span class="color-danger pr-2">*</span>检查点</div>
+                                    <div class="value d-flex align-items-center">{{curren_sq_photo_mqexamstandard.mq_exampoint_no}}&nbsp;{{curren_sq_photo_mqexamstandard.mq_exampoint_name}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-if="curren_sq_photo_checkResult == '0'" ng-click="slide_page_go('.task-sq-mqexamstandardlist-wrapper');set_current_point(curren_sq_photo_seq)">
+                                    <div class="title d-flex align-items-center"><span class="color-danger pr-2">*</span>未达到原因</div>
+                                    <div class="value d-flex align-items-center">{{curren_sq_photo_clause.standard_no}}&nbsp;{{curren_sq_photo_clause.standard}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <img src="{{curren_sq_photo}}" class="mx-auto">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 子表 - 照片判断 -->
+            <!-- 子表 - 主问卷题目 -->
+            <div class="task-sq-mqexampointlist-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back()">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">选择检查点</div>
+                    <div class="header-placeholder"></div>
+                    <!--<div class="header-back-btn" ng-click="slide_page_back('.questionnaire-wrapper');">-->
+                    <!--<span>完成</span>-->
+                    <!--</div>-->
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="examPoint in sq.mqexampointlist | orderBy:'mq_exampoint_no'" ng-click="slide_page_back('.task-sq-photos-check-wrapper');set_sq_mqexampointlist(examPoint)" data-id="{{examPoint.mq_exam_standard_id}}">
+                                    <div class="title">{{examPoint.mq_exampoint_no}}&nbsp;{{examPoint.mq_exampoint_name}}</div>
+                                    <div class="value"><i class="icon-normal" style="color: #28a745;" ng-if="curren_sq_photo_mqexamstandard.mq_exampoint_id == examPoint.mq_exampoint_id"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 子表 - 主问卷题目 -->
+            <!-- 子表 - 判断条款 -->
+            <div class="task-sq-mqexamstandardlist-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.task-sq-photos-check-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">选择未达到原因</div>
+                    <div class="header-placeholder"></div>
+                    <!--<div class="header-back-btn" ng-click="slide_page_back('.questionnaire-wrapper');">-->
+                    <!--<span>完成</span>-->
+                    <!--</div>-->
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in sq.mqexamstandardlist | orderBy:'standard_no'" ng-click="slide_page_back('.task-sq-photos-check-wrapper');set_sq_mqexamstandard(item)" data-id="{{item.mq_exam_standard_id}}" ng-show="item.mq_exampoint_id == curren_sq_photo_mqexamstandard.mq_exampoint_id">
+                                    <div class="title">{{item.standard_no}}&nbsp;{{item.standard}}</div>
+                                    <div class="value"><i class="icon-normal" style="color: #28a745;" ng-if="curren_sq_photo_clause.mq_exam_standard_id == item.mq_exam_standard_id"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 子表 - 判断条款 -->
+
+            <!-- 子表 - 新增 -->
+            <div class="questionnaire-addSQ-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-sq-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">{{sq.sqname}}-增加数据</div>
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="addSQ();">
+                            <span>完成</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body addSQ-form">
+                                <div class="cell" ng-repeat="item in sqstrulist" ng-if="item.type == 'base'" ng-click="new_SQ_data(item)">
+                                    <div class="title">{{item.title}}</div>
+                                    <div class="value">{{newSQ[item.id]}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 子表 - 新增 -->
+
+            <!-- 子表 - 新增数据 -->
+            <div class="task-new_SQ_data-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-addSQ-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">填写{{new_sq_data_title}}</div>
+                    <div class="header-back-btn" ng-click="add_new_SQ_data();">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="put-exceptional-remark-panel textarea-panel">
+                                <div class="cell-body">
+                                    <div class="cell">
+                                        <textarea type="text" class="w-100" id="new_sq_data_filed" ng-model="new_sq_data_filed" placeholder="请填写{{new_sq_data_title}}"></textarea>
+                                        <!--<p class="restrictions m-0">50字</p>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end  子表 - 新增数据  -->
+
+            <!-- 子表 - 新增检查数据 -->
+            <div class="task-add_check_filed_data-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-sq-check-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">填写{{add_check_filed_data_title}}</div>
+                    <div class="header-back-btn" ng-click="add_check_data_filed()">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="put-exceptional-remark-panel textarea-panel">
+                                <div class="cell-body">
+                                    <div class="cell">
+                                        <textarea type="text" class="w-100" id="check_data_filed" ng-model="check_data_filed" placeholder="{{add_check_filed_data_title}}"></textarea>
+                                        <!--<p class="restrictions m-0">50字</p>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end  子表 - 新增检查数据  -->
+            <!-- 更多菜单 -->
+            <div class="questionnaire-more-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="back_more_page()">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">更多操作-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-click="goto_all_question();">
+                                    <div class="title">选择题目</div>
+                                    <div class="value"></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-click="goto_put_exceptional();">
+                                    <div class="title">异常报备</div>
+                                    <div class="value"></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_put_normal();">
+                                    <div class="title">普通报备</div>
+                                    <div class="value"></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 更多菜单 -->
+
+            <!-- 全部问卷 -->
+            <div class="all-question-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-more-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">选择题目-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <p class="error_info" ng-if="all_question_list.error_info">{{all_question_list.error_info}}</p>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="q in all_question_list" ng-click="goto_appoint_question(q)">
+                                    <div class="title d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span style="margin-right: 6px;">{{q.step_no}}</span>
+                                            <!--<span style="margin-right: 6px;" ng-if="q.step_id">{{q.step_id}}</span>-->
+                                            <span ng-if="q.sq_name">[子问卷]{{q.sq_name}}</span>
+                                            <span ng-if="q.mq_exampoint_name"> {{q.mq_exampoint_no}}&nbsp;{{q.mq_exampoint_name}}</span>
+                                        </div>
+                                        <div class="d-flex align-content-center align-items-center justify-content-start">
+                                            <span ng-if="!!q.nocheckflag" class="ml-2" style="font-size: 26px;vertical-align: middle;height: 36px;"><i class="icon icon-exempt" style="color: #ff3d3d;"></i></span>
+                                            <span ng-if="!!q.agencyrecordflag" class="ml-2" style="font-size: 26px;vertical-align: middle;height: 36px;"><i class="icon icon-today" style="color: #ff3d3d;"></i></span>
+                                            <span ng-if="!!q.finishedflag" class="ml-2" style="font-size: 26px;vertical-align: middle;height: 36px;"><span class="icon-finished" style="color: #3dbdff;"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="enter_btn" ng-if="!q.finishedflag"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 全部问卷 -->
+
+            <!-- 普通报备 -->
+            <div class="questionnaire-put-normal-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-more-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">普通报备-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-header">
+                        <div class="cells w-100">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div ng-include="'widget/task-status-header.html'" class="w-100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-click="slide_page_go('.questionnaire-put-normal-type-wrapper')">
+                                    <div class="title"><span class="color-danger pr-2">*</span>普通报备类型</div>
+                                    <div class="value">{{normalType.name}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="slide_page_go('.task-put-normal-remark-wrapper')">
+                                    <div class="title"><span class="color-danger pr-2">&nbsp;</span>普通报备描述</div>
+                                    <div class="value">{{put_normal.remark}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell" ng-click=";">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>普通报备照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 118px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in put_normal.photos" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '普通报备照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('普通报备照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('普通报备照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells"><button type="button" class="btn btn-bg-theme btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="submitNormalReport();">提交</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 普通报备 -->
+
+            <!-- 异常报备 -->
+            <div class="questionnaire-put-exceptional-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-more-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">异常报备-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-header">
+                        <div class="cells w-100">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div ng-include="'widget/task-status-header.html'" class="w-100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-click="slide_page_go('.questionnaire-put-exceptional-type-wrapper')">
+                                    <div class="title"><span class="color-danger pr-2">*</span>异常报备类型</div>
+                                    <div class="value">{{abnormalType.name}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="slide_page_go('.task-put-exceptional-remark-wrapper')">
+                                    <div class="title"><span class="color-danger pr-2">&nbsp;</span>异常报备描述</div>
+                                    <div class="value">{{put_exceptional.remark}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>异常报备照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 118px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in put_exceptional.photos" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '异常报备照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('异常报备照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('异常报备照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells"><button type="button" class="btn btn-bg-theme btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="submitAbnormalReport()">提交</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 异常报备 -->
+
+            <!-- 普通报备类型选择 -->
+            <div class="questionnaire-put-normal-type-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-put-normal-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">选择普通报备类型</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in NormalReportList" ng-click="setNormalReport(item)">
+                                    <div class="title">{{item.name}}</div>
+                                    <div class="value"><i class="icon-normal" style="color: #28a745;" ng-if="normalType.id == item.id"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 普通报备类型选择 -->
+
+            <!-- 异常报备类型选择 -->
+            <div class="questionnaire-put-exceptional-type-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-put-exceptional-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">选择异常报备类型</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in AbnormalReportList" ng-click="setAbnormalReport(item)">
+                                    <div class="title">{{item.name}}</div>
+                                    <div class="value"><i class="icon-normal" style="color: #28a745;" ng-if="abnormalType.id == item.id"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 异常报备类型选择 -->
+
+            <!-- 普通报备描述 -->
+            <div class="task-put-normal-remark-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-put-normal-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">填写普通报备描述</div>
+                    <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-put-normal-wrapper');">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="put-normal-remark-panel textarea-panel">
+                                <div class="cell-body">
+                                    <textarea id="put-normal-remark" ng-model="put_normal.remark" placeholder="请填写普通报备描述"></textarea>
+                                    <!--<p class="restrictions m-0">50字</p>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 普通报备描述 -->
+            <!-- 异常报备描述 -->
+            <div class="task-put-exceptional-remark-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-put-exceptional-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">填写异常报备描述</div>
+                    <div class="header-back-btn" ng-click="slide_page_back('.questionnaire-put-exceptional-wrapper');">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="put-exceptional-remark-panel textarea-panel">
+                                <div class="cell-body">
+                                    <textarea id="put-exceptional-remark" ng-model="put_exceptional.remark" placeholder="请填写异常报备描述"></textarea>
+                                    <!--<p class="restrictions m-0">50字</p>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 异常报备描述 -->
+
+            <!-- 离店 -->
+            <div class="task-leave-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="goto_page_task()">
+                            <i class="icon-back"></i><span>取消</span>
+                        </div>
+                    </div>
+                    <div class="title">离店-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-header">
+                        <div class="cells w-100">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="d-flex justify-content-start align-items-center" style=" flex-grow: 1; ">
+                                        <div class="" style=" flex-grow: 0; ">
+                                            <div class="item-avatar" style="background-image: url({{task_detail.DOOR_PHOTO}})" ng-click="photo_preview_open($event)"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column" style=" flex-grow: 1; ">
+                                           
+                                            <div class="d-flex justify-content-start text-center">
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-abnormal" style="color: #ff3d3d;" ng-show="task_detail.STATUS == 0"></span><span class="icon-abnormal" ng-show="task_detail.STATUS == 1"></span></div>
+                                                    <div class="item-title">正常检查/异常检查</div>
+                                                    <div class="item-value"><span ng-show="task_detail.STATUS == 0" style="color: #ff3d3d;">异常</span><span ng-show="task_detail.STATUS == 1">正常</span></div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-percent"></span></div>
+                                                    <div class="item-title">完成比例</div>
+                                                    <div class="item-value">{{leaveData.questionPercent}}（{{leaveData.questionFinish}}）</div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-exempt" ng-show="task_detail.EXEMPT_COUNT == 0"></span><span class="icon-exempt" ng-show="task_detail.EXEMPT_COUNT > 0" style="color: #ff3d3d;"></span></div>
+                                                    <div class="item-title">免检数</div>
+                                                    <div class="item-value"><span ng-show="task_detail.EXEMPT_COUNT == 0">{{task_detail.EXEMPT_COUNT}}</span><span ng-show="task_detail.EXEMPT_COUNT > 0" style="color: #ff3d3d;">{{task_detail.EXEMPT_COUNT}}</span></div>
+                                                </div>
+                                                <div class="questionnaire-header-item">
+                                                    <div class="icon p-2"><span class="icon-today" ng-show="task_detail.AGENCYRECORDCOUNT == 0"></span><span class="icon-today" ng-show="task_detail.AGENCYRECORDCOUNT > 0" style="color: #ff3d3d;"></span></div>
+                                                    <div class="item-title">经销商报备数</div>
+                                                    <div class="item-value"><span ng-show="task_detail.AGENCYRECORDCOUNT == 0">{{task_detail.AGENCYRECORDCOUNT}}</span><span ng-show="task_detail.AGENCYRECORDCOUNT > 0" style="color: #ff3d3d;">{{task_detail.AGENCYRECORDCOUNT}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">问卷完整性</div>
+                                    <div class="value">{{leaveData.questionResult}}</div>
+                                </div>
+                                <div class="cell" ng-click="goto_unqualified_list()">
+                                    <div class="title"><span class="color-danger pr-2" ng-if="unqualifiedList.length > 0">*</span>不符合项及经销商现场申诉</div>
+                                    <div class="value"><span class="badge badge-notice" ng-if="unqualifiedList.length > 0" style=" font-size: 14px; min-width: 22px; min-height: 22px; line-height: 16px; font-weight: 100;position: relative; right: 0; top: 0; "><span ng-if="unqualifiedList.length > 0">{{unqualifiedList.length}}</span></span><span ng-if="!unqualifiedList || unqualifiedList.length == 0">0</span></div>
+                                    <div class="enter_btn" ng-if="unqualifiedList.length > 0"></div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title d-flex align-items-center"><span class="color-danger pr-2">*</span>声明文件是否已阅读</div>
+                                    <div class="value d-flex align-items-center" ng-click="leave_readed_switch()"><div class="mr-2" ng-if="leave.readed">是</div><div class="mr-2" ng-if="!leave.readed">否</div><div class="leave_readed_switch_panel" style=" pointer-events: none; "><input type="checkbox" class="js-switch leave_readed_switch"></div></div>
+                                </div>
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>名片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 53px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in leave.business_card" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '名片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('名片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('名片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>合影</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 53px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in leave.joint_photo" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '合影');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('合影');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('合影');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell" ng-click="signPanelInit()">
+                                    <div class="title d-flex align-items-center"><span class="color-danger pr-2">*</span>签名</div>
+                                    <div class="value d-flex align-items-center photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div style=""><img src="{{leave.sign}}"  width="auto" height="60" style="width: auto;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells"><button type="button" id="submit_leave_btn" class="btn btn-bg-theme btn-sm w500-btn mt-0 mb-2 mx-auto d-block" ng-click="checkLeaveForm()">提交</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 离店 -->
+
+            <!-- 签名 -->
+            <div class="task-sign-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="sign_page_back()">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">签名</div>
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="submitSign();">
+                            <span>完成</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-panel-body">
+                    <div class="sign_panel_bg" style="border: 1px black solid;"></div>
+                </div>
+            </div>
+            <!-- end 签名 -->
+
+            <!-- 声明文件 -->
+            <div class="task-readed-file-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.task-leave-wrapper');">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">声明文件</div>
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="readed_checked();">
+                            <span>同意</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="d-flex align-items-baseline">
+                                        <!--<input type="checkbox" ng-model="readed_checkbox" id="readed_checkbox" style="zoom: 1.6;display: inline-block;vertical-align: middle;position: relative;top: 2px;">-->
+                                        <label style=" display: inline; " class="pl-2" for="readed_checkbox" ng-bind-html="statement"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 声明文件 -->
+
+            <!-- 不符合项 -->
+            <div class="unqualified-list-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.task-leave-wrapper');">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">不符合项-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in unqualifiedList" ng-click="goto_appeal(item.unqualified_id);slide_page_go('.appeal-wrapper');" ng-show="item.status == 0">
+                                    <div class="title text-ellipsis flex-shrink-1">{{item.standard_no}}&nbsp;{{item.standard}}</div>
+                                    <div class="value flex-shrink-0"><span>未申诉</span></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-repeat="item in unqualifiedList" ng-show="item.status == 1">
+                                    <div class="title text-ellipsis flex-shrink-1">{{item.standard_no}}&nbsp;{{item.standard}}</div>
+                                    <div class="value flex-shrink-0"><span>已申诉</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 不符合项 -->
+
+            <!-- 申诉 -->
+            <div class="appeal-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.unqualified-list-wrapper');">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">不符合项及经销商现场申述-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{unqualifiedData.task_code}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{unqualifiedData.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{unqualifiedData.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">检查点</div>
+                                    <div class="value">{{unqualifiedData.mq_exampoint_no}}&nbsp;{{unqualifiedData.mq_exampoint_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">未达到原因</div>
+                                    <div class="value">{{unqualifiedData.standard_no}}&nbsp;{{unqualifiedData.standard}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">描述</div>
+                                    <div class="value">{{unqualifiedData.remark}}</div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">不合格照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in unqualifiedData.imagelist" repeat-lazyload ng-if="photo.type == '3'">
+                                                    <div class="photo lazy" data-original="{{photo.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-click="slide_page_go('.appeal-opinion-wrapper')" ng-show="unqualifiedData.status == '0'">
+                                    <div class="title">经销商现场申诉意见</div>
+                                    <div class="value">{{unqualifiedData.appeal_comment}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-show="unqualifiedData.status == '1'">
+                                    <div class="title">经销商现场申诉意见</div>
+                                    <div class="value">{{unqualifiedData.appeal_comment}}</div>
+                                </div>
+                                <div class="cell photos-thumb-cell" ng-show="unqualifiedData.status == '0'">
+                                    <div class="photos-thumb-title">经销商现场申述照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 167px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in appeal.photos" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '申述照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('申述照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('申述照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0" ng-show="unqualifiedData.status == '1'">
+                                    <div class="photos-thumb-title">经销商现场申述照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in unqualifiedData.agencyappealimagelist" repeat-lazyload ng-if="photo.type == '14'">
+                                                    <div class="photo lazy" data-original="{{photo.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells" ng-show="unqualifiedData.status == '0'"><button type="button" class="btn btn-bg-theme btn-sm w500-btn d-block mt-0 mb-2" ng-click="appealSubmit(unqualifiedData.unqualified_id)">提交</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 申诉 -->
+
+            <!-- 申诉意见 -->
+            <div class="appeal-opinion-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.appeal-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">填写申诉意见</div>
+                    <div class="header-back-btn" ng-click="slide_page_back('.appeal-wrapper');">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="put-exceptional-remark-panel textarea-panel">
+                                <div class="cell-body">
+                                    <textarea id="appeal-opinion" ng-model="unqualifiedData.appeal_comment" placeholder="请填写申诉意见"></textarea>
+                                    <!--<p class="restrictions m-0">50字</p>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 申诉意见 -->
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>
+<div class="sign_panel hide">
+    <div class="eraser" ng-click="clearSign()" style="width: 45px;height: 45px;display: flex;align-items: center;justify-content: center;font-size: 26px;position: absolute;z-index: 106;"><i class="icon-eraser-solid"></i></div>
+</div>

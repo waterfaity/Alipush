@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="root_app_external"
+        path="sdcard" />
+    <external-path
+        name="root_app_external"
+        path="12" />
+</paths>

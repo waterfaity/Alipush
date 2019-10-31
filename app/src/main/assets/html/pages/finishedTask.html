@@ -1,0 +1,52 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container finishedTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- task -->
+        <div class="task-wrapper list-wrapper task-list-wrapper">
+            <div class="task-list-header list-header">
+                <div class="task-wrapper-expansion-btn list-wrapper-expansion-btn header-back-btn" ng-click="tasklist_expansion_btn();">
+                    <i class="icon-back"></i><span>隐藏</span>
+                </div>
+                <div class="title">已完成</div>
+                <div class="header-placeholder"></div>
+            </div>
+            <div class="task-list list-panel">
+                <div class="task-list-scroll list-scroll">
+                    <div class="task-item list-item" ng-repeat="task in task_list" ng-click="task_item_click(task.task_id)" data-id="{{task.task_id}}">
+                        <div class="task-item-head">
+                            <div class="d-flex">
+                                <div class="left-panel">
+                                    <div class="task-item-avatar" style="background-image: url({{task.DOOR_PHOTO}})">
+                                        <div class="svg-normal status-icon" ng-if="task.agencystatus == '正常店'"></div>
+                                        <div class="svg-abnormal status-icon" ng-if="task.agencystatus == '异常店'"></div>
+                                    </div>
+                                </div>
+                                <div class="right-panel">
+                                    <div class="w-100">
+                                    	<div class="title">{{task.task_code}}</div>
+                                        <div class="title">{{task.agency_name}}</div>
+                                        <div class="date d-block"><i class="icon icon-clock"></i><span>{{task.plan_time}}</span></div>
+                                        <div class="owner text-left float-left"><i class="icon icon-teacher"></i><span>{{task.name}}</span></div>
+                                        <div class="owner text-right float-right ng-binding">{{task.agencystatus}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="error_info">{{task_list_error_info}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <div ng-include="'widget/task-detail.html'"></div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>
+

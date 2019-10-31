@@ -1,0 +1,202 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container other-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- list -->
+        <div class="list-wrapper">
+            <div class="list-header">
+                <div></div>
+                <div class="list-header-title">
+                    <div class="title">{{currenProject.proj_name}}</div>
+                </div>
+                <div></div>
+            </div>
+            <div class="list-panel">
+                <div class="list-scroll" style=" height: calc(100vh - 50px); ">
+                    <div class="list-item active" ng-click="slide_page_switch('.profile-wrapper');list_item_highlight($event)">
+                        <div class="task-item-head d-flex align-content-center align-items-center justify-content-start">
+                            <div class="other-page-icon" style="background-image: url('assets/icon/profile.svg')"></div>
+                            <div><p>个人信息</p></div>
+                        </div>
+                    </div>
+                    <div class="list-item" ng-click="slide_page_switch('.project-info-wrapper');list_item_highlight($event)">
+                        <div class="task-item-head d-flex align-content-center align-items-center justify-content-start">
+                            <div class="other-page-icon" style="background-image: url('assets/icon/project-info.svg')"></div>
+                            <div><p>项目信息</p></div>
+                        </div>
+                    </div>
+                    <!--<div class="list-item" ng-click="">-->
+                        <!--<div class="task-item-head d-flex align-content-center align-items-center justify-content-start">-->
+                            <!--<div class="other-page-icon" style="background-image: url('assets/icon/project-switch.svg')"></div>-->
+                            <!--<div><p>项目切换</p></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="list-item" ng-click="goto_photos();slide_page_switch('.photo-gallery-wrapper');list_item_highlight($event)" ng-show="userinfo.role_code == 'ROLE_LS'">
+                        <div class="task-item-head d-flex align-content-center align-items-center justify-content-start">
+                            <div class="other-page-icon" style="background-image: url('assets/icon/photos.svg')"></div>
+                            <div><p>照片库</p></div>
+                        </div>
+                    </div>
+                    <div class="list-item" ng-click="goto_application_info();list_item_highlight($event)">
+                        <div class="task-item-head d-flex align-content-center align-items-center justify-content-start">
+                            <div class="other-page-icon" style="background-image: url('assets/icon/application-info.svg')"></div>
+                            <div><p>软件信息</p></div>
+                        </div>
+                    </div>
+                    <div class="list-item" ng-click="go('/schedule')">
+                        <div class="task-item-head d-flex align-content-center align-items-center justify-content-start">
+                            <div class="other-page-icon" style="background-image: url('assets/icon/schedule.svg')"></div>
+                            <div><p>项目进度</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 个人信息 -->
+            <div class="profile-wrapper slide current-slide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title">个人信息</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">账号</div>
+                                    <div class="value">{{userinfo.name}}</div>
+                                </div>
+                                <div class="cell" ng-click="slide_page_go('.project-password-reset-wrapper')">
+                                    <div class="title">密码</div>
+                                    <div class="value">密码重置</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells"><button type="button" class="btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="logout();">退出软件</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 个人信息 -->
+            <!-- 密码重置 -->
+            <div class="project-password-reset-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn" ng-click="slide_page_back('.profile-wrapper')">
+                            <i class="icon-back"></i><span>返回</span>
+                        </div>
+                    </div>
+                    <div class="title">密码重置</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <input type="text" placeholder="旧密码" ng-model="reset_pwd.old_pwd">
+                                </div>
+                                <div class="cell">
+                                    <input type="text" placeholder="新密码" ng-model="reset_pwd.new_pwd">
+                                </div>
+                                <div class="cell">
+                                    <input type="password" placeholder="确认新密码" ng-model="reset_pwd.new_pwd2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells"><button type="button" class="btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="reset_password();">提交</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 密码重置 -->
+            <!-- 项目信息 -->
+            <div class="project-info-wrapper slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title">项目信息</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="text-center mx-auto"><img src="assets/logo/{{loginHeader.logoUrl}}"></div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">项目名称</div>
+                                    <div class="value">{{ProjMessage.proj_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">主机厂</div>
+                                    <div class="value">{{ProjMessage.oem_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">项目管理员</div>
+                                    <div class="value">{{ProjMessage.proj_admin}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 项目信息 -->
+            <!-- 软件信息 -->
+            <div class="application-info-wrapper slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title">软件信息</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">软件名称</div>
+                                    <div class="value">{{softMessage.soft_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">版本号</div>
+                                    <div class="value">{{softMessage.version}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">版权所有</div>
+                                    <div class="value">{{softMessage.copyright}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">开发者</div>
+                                    <div class="value">{{softMessage.developer}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 软件信息 -->
+            <!-- 照片库 -->
+            <div class="photo-gallery-wrapper slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title">照片库</div>
+                    <div class="header-placeholder"></div>
+
+                </div>
+                <div class="workspace-panel">
+                    <div class="photo-gallery">
+                        <div ng-include="'widget/photos.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 照片库 -->
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>

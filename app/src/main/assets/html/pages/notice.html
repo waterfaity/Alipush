@@ -1,0 +1,104 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container notice-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- list -->
+        <div class="notice-wrapper list-wrapper task-list-wrapper">
+            <div class="list-header">
+                <div></div>
+                <div class="list-header-title">
+                    <div class="title">消息提醒</div>
+                </div>
+                <div></div>
+            </div>
+            <div class="list-panel">
+                <div class="tab-paenl d-flex">
+                    <div class="tab tab-1 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray btn-bg-darkgray" ng-click="switch_check_notice()">未读消息</div>
+                    <div class="tab tab-2 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray" ng-click="switch_uncheck_notice()">已读消息</div>
+                </div>
+                <div class="position-relative">
+                    <div class="list-scroll list-scroll-long position-absolute w-100 unchecked_notice_list">
+                        <div class="list-item" ng-repeat="item in uncheckedMessagelist | orderBy:'msg_time'" ng-click="get_check_notice_data(item, 'unchecked', $event)" data-item="{{item}}" data-id="{{item.msg_id}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar mt-0"><span class="icon"><i class="icon-info-circle-solid"></i></span></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="title">{{item.msg_user}}</div>
+                                                <div><span style=" font-size: 14px; ">{{item.msg_time}}</span></div>
+                                            </div>
+                                            <div><span class="message_content">{{item.msg_content}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="messagelist_error_info">{{messagelist_error_info}}</p>
+                    </div>
+                    <div class="list-scroll position-absolute w-100 checked_notice_list hide">
+                        <div class="list-item" ng-repeat="item in checkedMessagelist | orderBy:'msg_time':true" ng-click="get_check_notice_data(item, 'checked', $event)" data-item="{{item}}" data-id="{{item.msg_id}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar mt-0"><span class="icon"><i class="icon-info-circle-solid"></i></span></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="title">{{item.msg_user}}</div>
+                                                <div><span style=" font-size: 14px; ">{{item.msg_time}}</span></div>
+                                            </div>
+                                            <div><span style=" font-size: 14px; ">{{item.msg_content}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="messagelist_error_info">{{messagelist_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 消息详情 -->
+            <div class="task-notice-data-wrapper slide current-slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title">消息内容</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">时间</div>
+                                    <div class="value">{{notice_data.msg_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">发件人</div>
+                                    <div class="value">{{notice_data.msg_user}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">消息内容</div>
+                                    <div class="value">{{notice_data.msg_content}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 消息详情 -->
+
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>

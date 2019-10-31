@@ -1,0 +1,1242 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container todayTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- task -->
+        <div class="task-wrapper list-wrapper task-list-wrapper">
+            <div class="task-list-header list-header">
+                <div class="task-wrapper-expansion-btn list-wrapper-expansion-btn header-back-btn" ng-click="tasklist_expansion_btn();">
+                    <i class="icon-back"></i><span>隐藏</span>
+                </div>
+                <div class="title">{{task_list_header_title}}</div>
+                <div class="header-placeholder"></div>
+            </div>
+            <div class="task-list list-panel">
+                <!--<div class="task-item task-wrapper-header list-item list-wrapper-header">-->
+                    <!--<div class="search-panel">-->
+                        <!--<div class="search-form">-->
+                            <!--<form action="">-->
+                                <!--<i class="icon-search"></i><input type="search" id="search" placeholder="搜索" class="pl-2">-->
+                            <!--</form>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="task-list-scroll list-scroll">
+                    <div class="task-item list-item" ng-repeat="task in task_list" ng-click="task_item_click(task.TASK_ID)" data-id="{{task.TASK_ID}}">
+                        <div class="task-item-head">
+                            <div class="d-flex">
+                                <div class="left-panel">
+                                    <div class="task-item-avatar" style="background-image: url({{task.DOOR_PHOTO}})">
+                                        <div class="lock status-icon" ng-if="task.TASK_STATUS == '1'"><i class="icon-lock"></i></div>
+                                        <div class="pause status-icon" ng-if="task.TASK_STATUS == '2' || task.TASK_STATUS == '3' || task.TASK_STATUS == '4'"><i class="icon-pause-solid"></i></div>
+                                        <div class="play status-icon" ng-if="task.TASK_STATUS == '5'"><i class="icon-play-solid"></i></div>
+                                    </div>
+                                </div>
+                                <div class="right-panel">
+                                    <div class="w-100">
+                                    	<div class="title">{{task.TASK_CODE}}</div>
+                                        <div class="title">{{task.AGENCY_NAME}}</div>
+                                        <div class="address"><i class="icon icon-local"></i><span>{{task.ADDRESS}}</span></div>
+                                        <div class="date-owner-box">
+                                            <div class="date"><i class="icon icon-clock"></i><span>{{task.PLAN_TIME}}</span></div>
+                                            <div class="owner"><i class="icon icon-teacher"></i><span>{{task.NAME}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="error_info">{{task_list_error_info}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 任务详情 -->
+            <div class="task-detail-wrapper slide current-slide hide">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()">
+                            <i class="icon-back"></i><span>展开</span>
+                        </div>
+                    </div>
+                    <div class="title">今日任务状态-{{task_detail.ABBR_NAME}}</div>
+                    <div class="workspace-wrapper-expansion-placeholder"></div>
+                </div>
+                <div class="workspace-panel hide">
+                    <div class="workspace-panel-header">
+                        <div class="cells w-100">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div ng-include="'widget/task-status-header.html'" class="w-100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workspace-panel-body" data-STATUS="{{task_detail.TASK_STATUS}}">
+                        <div ng-show="task_detail.TASK_STATUS == 0 && userinfo.role_code == 'ROLE_LS'">
+                            <div class="cells">
+                            	<button type="button" class="btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="slide_page_go('.task-arrive-wrapper');arrive_go();">打卡</button>
+                            </div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 0">
+                            <div class="cells">
+                                <div class="cell-body">
+                                    <div class="cell">当前任务尚未开始</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 1">
+                            <div class="cells">
+                                <div class="cell-body">
+                                    <div class="cell">当前任务锁定</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 2">
+                            <div class="cells">
+                                <div class="cell-body">
+                                    <div class="cell">当前任务暂停，正在打卡确认中</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 3">
+                            <div class="cells">
+                                <div class="cell-body">
+                                    <div class="cell">当前任务暂停，正在离店确认中</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 4">
+                            <div class="cells">
+                                <div class="cell-body">
+                                    <div class="cell">当前任务暂停，正在异常报备确认中</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 5 && userinfo.role_code == 'ROLE_LS'">
+                            <div class="cells"><button type="button" class="btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="goto_questionnaire()" ng-show="task_detail.progress != 100"><span ng-if="!task_detail.progress || task_detail.progress == 0">开始检查</span><span ng-if="task_detail.progress > 0">继续检查</span></button></div>
+                            <div class="cells" ng-show="task_detail.STATUS == 0 || (task_detail.TOTALCOUNT != 0 && task_detail.FINISHEDCOUNT+task_detail.EXEMPT_COUNT >= task_detail.TOTALCOUNT)"><button type="button" class="btn btn-bg-white color-red btn-sm w100-btn mt-0 mb-2" ng-click="leave_wrapper_init()"><strong>提交离店确认</strong></button></div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 6">
+                            <div class="cells"><button type="button" class="btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="finish_task()"><span>结束任务</span></button></div>
+                        </div>
+                        <div ng-show="task_detail.TASK_STATUS == 7">
+                            <div class="cells">
+                                <div class="cell-body">
+                                    <div class="cell">当前任务已结束</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{task_detail.TASK_CODE}}</div>
+                                </div>
+                                <div class="cell" ng-click="goto_agency_detail();">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{task_detail.AGENCY_NAME}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{task_detail.PLAN_TIME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">问卷完成比例</div>
+                                    <div class="value">{{task_detail.progress}}%（{{task_detail.FINISHEDCOUNT}}/{{task_detail.TOTALCOUNT}}） </div>
+                                </div>
+                                <div class="cell" ng-if="false">
+                                    <div class="title">问卷完成数</div>
+                                    <div class="value"></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_MQModuleList()">
+                                    <div class="title">问卷种类</div>
+                                    <div class="value">{{task_detail.SQ_TABLE_NAME}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_agency_record_list()">
+                                    <div class="title">经销商报备情况</div>
+                                    <div class="value">{{task_detail.AGENCYRECORDCOUNT}}</div>
+                                    <div class="enter_btn" ng-show="task_detail.AGENCYRECORDCOUNT > 0"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_user_detail('巡检老师信息', task_detail.TEACHER_ID);">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{task_detail.TEACHER_NAME}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_user_detail('督导信息', task_detail.MONITOR_ID);">
+                                    <div class="title">督导</div>
+                                    <div class="value">{{task_detail.MONITOR_NAME}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_user_detail('项目管理员信息', task_detail.PROJ_ADMIN_ID);">
+                                    <div class="title">项目管理员</div>
+                                    <div class="value">{{task_detail.PROJ_ADMIN}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-click="goto_arrive_data_wrapper();">
+                                    <div class="title">打卡确认时间</div>
+                                    <div class="value">{{task_detail.CARD_TIME}}</div>
+                                    <div class="enter_btn" ng-if="!!task_detail.CARD_TIME"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_abnormal_data_list()">
+                                    <div class="title">异常报备</div>
+                                    <div class="value">{{task_detail.ABNORMAL_COUNT}}</div>
+                                    <div class="enter_btn" ng-if="task_detail.ABNORMAL_COUNT != 0"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_normal_data_list()">
+                                    <div class="title">普通报备</div>
+                                    <div class="value">{{task_detail.NORMAL_COUNT}}</div>
+                                    <div class="enter_btn" ng-if="task_detail.NORMAL_COUNT != 0"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_unqualified_list()">
+                                    <div class="title">不符合项及经销商现场申诉</div>
+                                    <div class="value">{{task_detail.APPEAL_COUNT}}</div>
+                                    <div class="enter_btn" ng-if="task_detail.APPEAL_COUNT != 0"></div>
+                                </div>
+                                <div class="cell" ng-click="goto_leave_data_wrapper();">
+                                    <div class="title">离店确认时间</div>
+                                    <div class="value">{{task_detail.LEAVE_TIME}}</div>
+                                    <div class="enter_btn" ng-if="!!task_detail.LEAVE_TIME"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">消息提醒</div>
+                                    <div class="value">{{task_detail.MESSAGE_COUNT}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="error_info">{{task_detail_error_info}}</p>
+            </div>
+            <!-- end 任务详情 -->
+            <!-- 经销商详情 -->
+            <div class="task-agency-detail-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">经销商详细信息</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">经销商全称</div>
+                                    <div class="value">{{agency_detail.agencyData.AGENCY_NAME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商简称</div>
+                                    <div class="value">{{agency_detail.agencyData.ABBR_NAME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商代码</div>
+                                    <div class="value">{{agency_detail.agencyData.AGENCY_CODE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">当前状态</div>
+                                    <div class="value"><b ng-show="task_detail.STATUS == 0"><span class="color-danger">异常店</span></b><b ng-show="task_detail.STATUS == 1">正常店</b></div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经纬度坐标</div>
+                                    <div class="value"><span>{{agency_detail.LONGITUDE_LATITUDE}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <!--div class="cells-title">上期状态</div-->
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">上期检查时间</div>
+                                    <div class="value">无</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">上期检查状态</div>
+                                    <div class="value">无</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">上期检查报告</div>
+                                    <div class="value">无</div>
+                                    <!--div class="enter_btn"></div-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <!--div class="cells-title">基本信息</div-->
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">区域编号</div>
+                                    <div class="value">{{agency_detail.agencyData.AREA_CODE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">区域</div>
+                                    <div class="value">{{agency_detail.agencyData.AREA}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">责任区编码</div>
+                                    <div class="value">{{agency_detail.agencyData.ZONE_CODE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">责任区</div>
+                                    <div class="value">{{agency_detail.agencyData.ZONE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">城市编码</div>
+                                    <div class="value">{{agency_detail.agencyData.CITY_CODE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">城市</div>
+                                    <div class="value">{{agency_detail.agencyData.CITY}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">业态</div>
+                                    <div class="value">{{agency_detail.agencyData.FORMAT}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">级别</div>
+                                    <div class="value">{{agency_detail.agencyData.LEVEL}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">入网时间</div>
+                                    <div class="value">{{agency_detail.agencyData.NET_TIME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经营地址</div>
+                                    <div class="value">{{agency_detail.agencyData.ADDRESS}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">区号</div>
+                                    <div class="value">{{agency_detail.agencyData.ZONE_NO}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">业务电话</div>
+                                    <div class="value">{{agency_detail.agencyData.PHONE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">展厅面积</div>
+                                    <div class="value">{{agency_detail.agencyData.EXHI_AREA}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">法人</div>
+                                    <div class="value">{{agency_detail.agencyData.BOSS}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">注册资金（万）</div>
+                                    <div class="value">{{agency_detail.agencyData.CAPITAL}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <!--div class="cells-title">人员信息</div-->
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="m in agency_detail.agencyMemberList" ng-click="goto_member_detail(m)">
+                                    <div class="title">{{m.MEMBER_TYPE}}</div>
+                                    <div class="value">{{m.MEMBER_NAME}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 经销商详情 -->
+            <!-- 巡检老师 -->
+            <div class="task-user-detail-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">{{user_detail_title}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">姓名</div>
+                                    <div class="value">{{user_detail.userMessage.name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">电话</div>
+                                    <div class="value">{{user_detail.userMessage.phone}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">电子邮件</div>
+                                    <div class="value">{{user_detail.userMessage.email}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 巡检老师 -->
+            <!-- 人员信息 -->
+            <div class="task-member-detail-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-agency-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">{{member_detail.MEMBER_TYPE}}信息</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">姓名</div>
+                                    <div class="value">{{member_detail.MEMBER_NAME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">电话</div>
+                                    <div class="value">{{member_detail.MEMBER_PHONE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">手机</div>
+                                    <div class="value">{{member_detail.MEMBER_MOBILE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">电子邮件</div>
+                                    <div class="value">{{member_detail.MEMBER_EMAIL}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 人员信息 -->
+            <!-- 经销商报备记录 -->
+            <div class="task-agency-record-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">经销商报备记录</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <p class="error_info" ng-if="agency_record_list.error_info">{{agency_record_list.error_info}}</p>
+                        <div class="cells">
+                            <div class="cell-body" ng-if="!agency_record_list.error_info">
+                                <div class="cell" ng-repeat="q in agency_record_list">
+                                	<div class="title">{{$index + 1}}</div>
+                                    <div class="value">（{{q.mq_exampoint_no}}）{{q.mq_exampoint_name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 经销商报备记录 -->
+            <!-- 检查模块 一级 -->
+            <div class="questionnaire-MQModuleList-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">模块</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body" ng-if="!mqmodulelist_error_info">
+                                <div class="cell" ng-repeat="mqmodule in mqmodulelist | orderBy:'orderby'" ng-click="goto_MQCheckList(mqmodule.mq_module_id);">
+                                    <div class="title">{{mqmodule.mq_module_no}}&nbsp;{{mqmodule.mq_module_name}}</div>
+                                    <div class="value"></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info">{{mqmodulelist_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- end 检查模块 一级 -->
+            <!-- 检查项 二级 -->
+            <div class="questionnaire-MQCheckList-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.questionnaire-MQModuleList-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">检查项</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body" ng-if="!mqchecklist_error_info">
+                                <div class="cell" ng-repeat="mqcheck in mqchecklist" ng-click="goto_MQExamPointList(mqcheck.mq_checklist_id);">
+                                    <div class="title">{{mqcheck.mq_checklist_no}}&nbsp;{{mqcheck.mq_checklist_name}}</div>
+                                    <div class="value"></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info">{{mqchecklist_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- end 检查项 二级 -->
+            <!-- 检查点 三级 -->
+            <div class="questionnaire-MQExamPointList-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">检查点</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body" ng-if="!mqexampointlist_error_info">
+                                <div class="cell" ng-repeat="mqexampoint in mqexampointlist | orderBy:'mq_exampoint_no'">
+                                    <div class="title">{{mqexampoint.mq_exampoint_no}}&nbsp;{{mqexampoint.mq_exampoint_name}}</div>
+                                    <div class="value"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info">{{mqexampointlist_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- end 检查点 三级 -->
+
+            <!-- 全部问卷 -->
+            <div class="all-question-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">{{task_detail.SQ_TABLE_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <p class="error_info" ng-if="all_question_list.error_info">{{all_question_list.error_info}}</p>
+                        <div class="cells">
+                            <div class="cell-body" ng-if="!all_question_list.error_info">
+                                <div class="cell" ng-repeat="q in all_question_list.allquestionlist">
+                                    <div class="">{{q.step_no}}</div>
+                                    <div class="">{{q.exam_point_id}}</div>
+                                    <div class="">{{q.step_type}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 全部问卷 -->
+            <!-- 打卡确认时间 -->
+            <div class="task-arrive-data-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                            <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">打卡确认信息-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{arrive_data.arrivedata.task_code}}</div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{arrive_data.arrivedata.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{arrive_data.arrivedata.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡提交时间</div>
+                                    <div class="value">{{arrive_data.arrivedata.mark_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡确认时间</div>
+                                    <div class="value">{{arrive_data.arrivedata.card_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡地点</div>
+                                    <div class="value">{{arrive_data.arrivedata.address}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡坐标</div>
+                                    <div class="value">{{arrive_data.arrivedata.longitude}}, {{arrive_data.arrivedata.latitude}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商坐标</div>
+                                    <div class="value">{{agency_detail.agencyData.LONGITUDE}}, {{agency_detail.agencyData.LATITUDE}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">GPS地图</div>
+                                    <div class="" ng-repeat="image in arrive_data.arriveimagelist" repeat-lazyload ng-if="image.type == '12'"><img id="arriveMapImage" class="lazy" data-original="{{image.access_path}}" src="assets/icon/loading.gif" ng-click="photo_preview_open($event)" height="62"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">交通工具</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in arrive_data.arriveimagelist" repeat-lazyload ng-if="image.type == '0'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">门口照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in arrive_data.arriveimagelist" repeat-lazyload ng-if="image.type == '1'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡备注</div>
+                                    <div class="value">{{arrive_data.arrivedata.remark}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in arrive_data.checkindatalist">
+                                    <div class="pr-4" style=" flex-grow: 0;">{{item.operater_time}}</div>
+                                    <div class="pr-4" style=" flex-grow: 0;"></div>
+                                    <div style=" flex-grow: 1; text-align: right; ">{{item.name}}&nbsp;{{item.operater_suggestion}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 打卡确认时间 -->
+            <!-- 离店确认时间 -->
+            <div class="task-leave-data-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">离店确认信息-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{leave_data.leavedata.task_code}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{leave_data.leavedata.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{leave_data.leavedata.agency_name}}</div>
+                                </div>
+                                 <div class="cell">
+                                    <div class="title">离店确认时间</div>
+                                    <div class="value">{{leave_data.leavedata.leave_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">问卷完整性</div>
+                                    <div class="value">
+                                    	<span ng-if="leave_data.leavedata.sq_status=='0'">不完整</span>
+                                    	<span ng-if="leave_data.leavedata.sq_status=='1'">完整</span>
+                                   	</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">声明文件是否已阅读</div>
+                                    <div class="value"><div ng-if="leave_data.leavedata.readed == 0">已阅读</div><div ng-if="leave_data.leavedata.readed == 1">未阅读</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">名片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in leave_data.leaveimagelist" repeat-lazyload ng-if="image.type == '6'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">合影</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in leave_data.leaveimagelist" repeat-lazyload ng-if="image.type == '7'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">签名</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in leave_data.leaveimagelist" repeat-lazyload ng-if="image.type == '8'">
+                                                    <div class="photo sign_photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in leave_data.checkoutdatalist">
+                                    <div class="pr-4" style=" flex-grow: 0;">{{item.operater_time}}</div>
+                                    <div class="pr-4" style=" flex-grow: 0;"></div>
+                                    <div style=" flex-grow: 1; text-align: right; ">{{item.name}}&nbsp;{{item.operater_suggestion}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 离店确认时间 -->
+            <!-- 异常报备列表 -->
+            <div class="task-abnormal_report-list-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">异常报备记录-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in abnormal_report_list" ng-click="goto_abnormal_data_detail(item)">
+                                    <div class="title"><span class="pr-3">{{$index + 1}}</span><span>{{item.record_time}}</span></div>
+                                    <div class="value">{{item.abnormal_record_name}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 异常报备列表 -->
+            <!-- 异常报备记录 -->
+            <div class="task-abnormal_report-data-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-abnormal_report-list-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">异常报备信息-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.task_code}}</div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{task_detail.AGENCY_NAME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.teacher_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">异常报备时间</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.record_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">异常报备类型</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.abnormal_record_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">异常报备描述</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.abormal_record_comments}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">异常报备照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in abnormal_report_data.imageList" repeat-lazyload>
+                                                    <div class="photo lazy" data-original="{{photo.ACCESS_PATH}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in abnormal_report_data.recordList">
+                                    <div class="">{{item.OPERATE_TIME}}</div>
+                                    <div class="">{{item.NAME}}&nbsp;{{item.OPERATE_SUGGESTION}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 异常报备记录 -->
+            <!-- 普通报备列表 -->
+            <div class="task-normal_report-list-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">普通报备记录-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in normal_report_list" ng-click="goto_normal_data_detail(item)">
+                                    <div class="title"><span class="pr-3">{{$index + 1}}</span><span>{{item.record_time}}</span></div>
+                                    <div class="value">{{item.normal_record_name}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 普通报备列表 -->
+            <!-- 普通报备记录 -->
+            <div class="task-normal_report-data-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-normal_report-list-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">普通报备信息-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.task_code}}</div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{task_detail.AGENCY_NAME}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.teacher_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">普通报备时间</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.record_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">普通报备类型</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.normal_record_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">普通报备描述</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.normal_record_comments}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">普通报备照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in normal_report_data.imageList" repeat-lazyload>
+                                                    <div class="photo lazy" data-original="{{photo.ACCESS_PATH}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in normal_report_data.recordList">
+			                    	<div class="title">{{item.OPERATE_TIME}}</div>
+                                	<div class="value">{{item.NAME}}&nbsp;{{item.OPERATE_SUGGESTION}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 普通报备记录 -->
+
+            <!-- 打卡 -->
+            <div class="task-arrive-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">打卡-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="geolocation-panel">
+                                <div class="cell-body">
+                                    <div class="baidu_map-image" ng-show="arrive.map">
+                                        <img id="baidu_arrive_map_image" src="{{arrive.map}}" ng-click="photo_preview_open($event)">
+                                        <!--<div class="icon-local-panel"><i class="icon icon-local"></i></div>-->
+                                    </div>
+                                    <div class="cell location-info" ng-click="arrive_go()">
+                                        <div class="title">
+                                            <div><i class="icon icon-local"></i>{{arrive.location}}</div>
+                                            <div>{{arrive.longitude_latitude}}</div>
+                                        </div>
+                                        <div class="value"><i class="icon icon-clock"></i>{{arrive.date}}</div>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="title">经销商坐标</div>
+                                        <div class="value">{{agency_detail.LONGITUDE_LATITUDE}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>交通工具照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 118px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in arrive.transport_photos" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '交通工具照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('交通工具照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('交通工具照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell">
+                                    <div class="photos-thumb-title"><span class="color-danger pr-2">*</span>门口照片</div>
+                                    <div class="d-flex justify-content-end align-items-center" style=" width: calc(100% - 85px);">
+                                        <div class="photos-thumb-panel">
+                                            <div class="photos-thumb-scroll photos-thumb-scroll-right">
+                                                <div class="photos-thumb">
+                                                    <div class="photo-box" ng-repeat="(key, photo) in arrive.entrance_photos" repeat-photo>
+                                                        <img class="photo" src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                                                        <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_photo_btn(key, '门口照片');"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="photos-thumb-buttons">
+                                            <button type="button" class="btn btn-sm action_btn photo_btn" ng-click="photo_btn('门口照片');"><i class="icon-photo2"></i></button>
+                                            <button type="button" class="btn btn-sm action_btn" ng-click="select_photos_check_btn('门口照片');"><i class="icon-photo3"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell" ng-click="slide_page_go('.task-remarks-wrapper');">
+                                    <div class="title"><span class="color-danger pr-2">&nbsp;</span>打卡备注</div>
+                                    <div class="value">{{arrive.remarks}}</div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<input type="file" id="img1">-->
+                        <div class="cells"><button id="arrive_submit_btn" type="button" class="btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="arriveSubmit()">提交</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 打卡 -->
+            <!-- 打卡备注 -->
+            <div class="task-remarks-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-arrive-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">填写打卡备注</div>
+                    <div class="header-back-btn" ng-click="slide_page_back('.task-arrive-wrapper');">
+                        <span>完成</span>
+                    </div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="remarks-panel textarea-panel">
+                                <div class="cell-body">
+                                    <textarea id="remarks" ng-model="arrive.remarks" placeholder="请填写打卡备注"></textarea>
+                                    <p class="restrictions m-0">50字</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 备注 -->
+
+            <!-- 不符合项 -->
+            <div class="unqualified-list-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.task-detail-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">不符合项-{{task_detail.ABBR_NAME}}</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in unqualifiedList" ng-click="goto_appeal(item.unqualified_id);slide_page_go('.appeal-wrapper');">
+                                    <div class="title text-ellipsis flex-shrink-1">{{item.standard_no}}&nbsp;{{item.standard}}</div>
+                                    <div class="value flex-shrink-0"><span ng-show="item.status == 0">未申诉</span><span ng-show="item.status == 1">已申诉</span></div>
+                                    <div class="enter_btn"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 不符合项 -->
+
+            <!-- 申诉 -->
+            <div class="appeal-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('.unqualified-list-wrapper')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">不符合项及经销商现场申述-{{task_detail.ABBR_NAME}}</div>
+                    <div class="workspace-wrapper-expansion-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{unqualifiedData.task_code}}</div>
+                                </div>
+								<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{unqualifiedData.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{unqualifiedData.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">检查点</div>
+                                    <div class="value">{{unqualifiedData.mq_exampoint_no}}&nbsp;{{unqualifiedData.mq_exampoint_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">未达到原因</div>
+                                    <div class="value">{{unqualifiedData.standard_no}}&nbsp;{{unqualifiedData.standard}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">描述</div>
+                                    <div class="value">{{unqualifiedData.remark}}</div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">不合格照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in unqualifiedData.imagelist" repeat-lazyload ng-if="photo.type == '3'">
+                                                    <div class="photo lazy" data-original="{{photo.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">经销商现场申诉意见</div>
+                                    <div class="value">{{unqualifiedData.appeal_comment}}</div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">经销商现场申述照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in unqualifiedData.agencyappealimagelist" repeat-lazyload ng-if="photo.type == '14'">
+                                                    <div class="photo lazy" data-original="{{photo.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 申诉 -->
+            <!-- 照片库 -->
+            <div class="task-photos-wrapper slide slide-right">
+                <div class="workspace-header">
+                    <div class="workspace-wrapper-expansion">
+                        <div class="header-back-btn">
+                            <i class="icon-back"></i>
+                             <div class="workspace-wrapper-expansion-btn" ng-click="workspace_expansion_btn()"><span>展开&nbsp;|&nbsp;</span></div>
+                            <div class="workspace-wrapper-back-btn" ng-click="slide_page_back('')"><span>返回</span></div>
+                        </div>
+                    </div>
+                    <div class="title">照片库</div>
+                    <div class="header-back-btn" ng-click="todayTask_select_photos_btn();">
+                        <span>完成</span>
+                    </div>
+
+                </div>
+                <div class="workspace-panel">
+                    <div class="photo-gallery">
+                        <div ng-include="'widget/photos.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 照片库 -->
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>
+

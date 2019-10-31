@@ -1,0 +1,153 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container abnormalReportTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- list -->
+        <div class="abnormal_report-wrapper list-wrapper task-list-wrapper">
+            <div class="list-header">
+                <div></div>
+                <div class="list-header-title">
+                    <div class="title">异常报备记录</div>
+                </div>
+                <div></div>
+            </div>
+            <div class="list-panel">
+                <div class="tab-paenl d-flex">
+                    <div class="tab tab-1 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray btn-bg-darkgray" ng-click="switch_check_abnormal_report()">未处理</div>
+                    <div class="tab tab-2 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray" ng-click="switch_uncheck_abnormal_report()">已处理</div>
+                </div>
+                <div class="position-relative">
+                    <div class="list-scroll list-scroll-long position-absolute w-100 unchecked_abnormal_report_list">
+                        <div class="list-item" ng-repeat="item in uncheckedAbnormalReportList | orderBy:'MARK_TIME'" ng-click="get_check_abnormal_report_data(item, 'unchecked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.DOOR_PHOTO}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                            <div class="title">{{item.agency_name}}</div>
+                                            <div class="title">{{item.normal_record_type_name}}</div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.record_time}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.teacher_name}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="uncheckedAbnormalReportList_error_info">{{uncheckedAbnormalReportList_error_info}}</p>
+                    </div>
+                    <div class="list-scroll position-absolute w-100 checked_abnormal_report_list hide">
+                        <div class="list-item" ng-repeat="item in checkedAbnormalReportList | orderBy:'MARK_TIME':true" ng-click="get_check_abnormal_report_data(item, 'checked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.DOOR_PHOTO}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                            <div class="title">{{item.agency_name}}</div>
+                                            <div class="title">{{item.normal_record_type_name}}</div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.record_time}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.teacher_name}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="checkedAbnormalReportList_error_info">{{checkedAbnormalReportList_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 打卡确认时间 -->
+            <div class="task-abnormal_report-data-wrapper slide current-slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title" ng-if="checked == 'unchecked'">异常报备未处理（{{abnormal_report_data.abnormalRecordData.task_code}}）</div>
+                    <div class="title" ng-if="checked != 'unchecked'">异常报备已处理（{{abnormal_report_data.abnormalRecordData.task_code}}）</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.task_code}}</div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{currenAbnormalReport.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{currenAbnormalReport.teacher_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">异常报备时间</div>
+                                    <div class="value">{{currenAbnormalReport.record_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">异常报备类型</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.abnormal_record_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">异常报备描述</div>
+                                    <div class="value">{{abnormal_report_data.abnormalRecordData.abormal_record_comments}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">异常报备照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in abnormal_report_data.imageList" repeat-lazyload>
+                                                    <div class="photo lazy" data-original="{{photo.ACCESS_PATH}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in abnormal_report_data.recordList">
+                                    <div class="">{{item.OPERATE_TIME}}</div>
+                                    <div class="">{{item.NAME}}&nbsp;{{item.OPERATE_SUGGESTION}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells" ng-if="checked == 'unchecked' && abnormal_report_data.abnormalRecordData.checked == 0 && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_abnormalReport_btn btn btn-bg-theme color-white btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_AbnormalReport('上报项目管理员', 1)">上报项目管理员</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked' && abnormal_report_data.abnormalRecordData.checked == 3 && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_abnormalReport_btn btn btn-bg-theme color-white btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_AbnormalReport('确认', 2)">确认</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked' && abnormal_report_data.abnormalRecordData.checked == 4 && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_abnormalReport_btn btn btn-bg-white color-red color-theme btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_AbnormalReport('退回', 3)">退回</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_PROJADMIN'"><button type="button" class="submit_check_abnormalReport_btn btn btn-bg-theme color-white btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_AbnormalReport('确认', 2)">确认</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_PROJADMIN'"><button type="button" class="submit_check_abnormalReport_btn btn btn-bg-white color-red color-theme btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_AbnormalReport('退回', 3)">退回</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 打卡确认时间 -->
+
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>

@@ -1,0 +1,55 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container recentTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- task -->
+        <div class="task-wrapper list-wrapper task-list-wrapper">
+            <div class="task-list-header list-header">
+                <div class="task-wrapper-expansion-btn list-wrapper-expansion-btn header-back-btn" ng-click="tasklist_expansion_btn();">
+                    <i class="icon-back"></i><span>隐藏</span>
+                </div>
+                <div class="title">近期行程</div>
+                <div class="header-placeholder"></div>
+            </div>
+            <div class="task-list list-panel">
+                <div class="tab-paenl d-flex">
+                    <div class="tab tab-1 px-1 py-2 text-center flex-grow-1 border-bottom-darkgray" ng-repeat="item in task_count_list" ng-click="sidebar_item_recent_init($index + 1)" data-day="{{$index + 1}}">{{item.title}}<span class="count-badge badge badge-notice ng-binding ng-scope" ng-if="recent_count > 0">{{item.recent_count}}</span></div>
+                </div>
+                <div class="task-list-scroll list-scroll list-scroll-long">
+                    <div class="task-item list-item" ng-repeat="task in task_list" ng-click="task_item_click(task.TASK_ID)" data-id="{{task.TASK_ID}}">
+                        <div class="task-item-head">
+                            <div class="d-flex">
+                                <div class="left-panel">
+                                    <div class="task-item-avatar" style="background-image: url({{task.DOOR_PHOTO}})">
+                                    </div>
+                                </div>
+                                <div class="right-panel">
+                                    <div class="w-100">
+                                    	<div class="title">{{task.TASK_CODE}}</div>
+                                        <div class="title">{{task.AGENCY_NAME}}</div>
+                                        <div class="address"><i class="icon icon-local"></i><span>{{task.ADDRESS}}</span></div>
+                                        <div class="date-owner-box">
+                                            <div class="date"><i class="icon icon-clock"></i><span>{{task.PLAN_TIME}}</span></div>
+                                            <div class="owner"><i class="icon icon-teacher"></i><span>{{task.NAME}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="error_info">{{task_list_error_info}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <div ng-include="'widget/task-detail.html'"></div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>
+

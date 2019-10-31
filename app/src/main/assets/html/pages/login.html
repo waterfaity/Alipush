@@ -1,0 +1,18 @@
+<div class="pages-content login__form">
+    <div class="container-fluid" id="container">
+        <div class="page login-page d-flex justify-content-center align-items-center" data-page="login">
+            <div class="login-box">
+                <div class="login-logo align-center"><img src="assets/login/{{loginHeader.loginPageLogo}}" width="{{loginHeader.loginPageLogoWidth}}"></div>
+                <!--<div class="login-logo align-center"><img src="assets/login/login-logo-1.png" width="169"></div>-->
+                <!--<div class="login-logo align-center"><img src="assets/login/login-logo-2.png" width="180"></div>-->
+                <div class="login-title">{{loginHeader.loginPageTitle}}</div>
+                <div class="login-form-panel">
+                    <div class="user-panel input-panel"><label>账号</label><input class="user" name="user" type="text" ng-model="user"></div>
+                    <div class="password-panel input-panel"><label>密码</label><input class="password" name="password" ng-model="password" type="password" ng-keypress="($event.which === 13)?login():0"></div>
+                    <!--<div class="forgot-panel text-right"><a>忘记密码</a></div>-->
+                    <div class="align-center"><button id="login_btn" class="btn login-btn w-100" ng-click="login()">登录</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

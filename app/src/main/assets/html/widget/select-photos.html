@@ -1,0 +1,28 @@
+<div class="select-photos-panel">
+    <div class="cells">
+        <div class="cell-body">
+            <div class="cell">
+                <div class="d-flex justify-content-between mx-auto" style=" width: 60%; ">
+                    <button type="button" class="btn btn-sm action_btn mt-0 mb-2"  ng-click="photo_btn();"><div class="icon"><i class="icon-photo2"></i></div><div class="text mt-2">拍摄</div></button>
+                    <button type="button" class="btn btn-sm action_btn mt-0 mb-2"  ng-click="slide_page_go('.task-photos-wrapper');select_photos_check_btn();"><div class="icon"><i class="icon-photo3"></i></div><div class="text mt-2">照片</div></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-2"></div>
+    <div class="cells" ng-repeat="(key, photo) in select_photos">
+        <div class="photos-list">
+            <div class="cell-body">
+                <div class="cell">
+                    <div class="title">照片{{$index + 1}}</div>
+                    <div class="value"><button type="button" class="btn btn-bg-theme btn-sm" ng-click="remove_photo_btn($index);">删除</button></div>
+                </div>
+                <div class="cell">
+                    <div class="image-panel">
+                        <img src="{{photo}}" data-name="{{key}}" ng-click="photo_preview_open($event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

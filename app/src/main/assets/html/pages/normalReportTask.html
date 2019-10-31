@@ -1,0 +1,152 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container normalReportTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- list -->
+        <div class="normal_report-wrapper list-wrapper task-list-wrapper">
+            <div class="list-header">
+                <div></div>
+                <div class="list-header-title">
+                    <div class="title">普通报备记录</div>
+                </div>
+                <div></div>
+            </div>
+            <div class="list-panel">
+                <div class="tab-paenl d-flex">
+                    <div class="tab tab-1 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray btn-bg-darkgray" ng-click="switch_check_normal_report()">未处理</div>
+                    <div class="tab tab-2 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray" ng-click="switch_uncheck_normal_report()">已处理</div>
+                </div>
+                <div class="position-relative">
+                    <div class="list-scroll list-scroll-long position-absolute w-100 unchecked_normal_report_list">
+                        <div class="list-item" ng-repeat="item in uncheckedNormalReportList | orderBy:'record_time'" ng-click="get_check_normal_report_data(item, 'unchecked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.DOOR_PHOTO}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                        	<div class="title">{{item.task_code}}</div>
+                                            <div class="title">{{item.agency_name}}</div>
+                                            <div class="title">{{item.normal_record_type_name}}</div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.record_time}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.teacher_name}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="uncheckedNormalReportList_error_info">{{uncheckedNormalReportList_error_info}}</p>
+                    </div>
+                    <div class="list-scroll position-absolute w-100 checked_normal_report_list hide">
+                        <div class="list-item" ng-repeat="item in checkedNormalReportList | orderBy:'record_time':true" ng-click="get_check_normal_report_data(item, 'checked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.DOOR_PHOTO}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                        	<div class="title">{{item.task_code}}</div>
+                                            <div class="title">{{item.agency_name}}</div>
+                                            <div class="title">{{item.normal_record_type_name}}</div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.record_time}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.teacher_name}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="checkedNormalReportList_error_info">{{checkedNormalReportList_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 打卡确认时间 -->
+            <div class="task-normal_report-data-wrapper slide current-slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title" ng-if="checked == 'unchecked'">普通报备未处理（{{normal_report_data.normalRecordData.task_code}}）</div>
+                    <div class="title" ng-if="checked != 'unchecked'">普通报备已处理（{{normal_report_data.normalRecordData.task_code}}）</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.task_code}}</div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{currenNormalReport.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{currenNormalReport.teacher_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">普通报备时间</div>
+                                    <div class="value">{{currenNormalReport.record_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">普通报备类型</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.normal_record_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">普通报备描述</div>
+                                    <div class="value">{{normal_report_data.normalRecordData.normal_record_comments}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">普通报备照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, photo) in normal_report_data.imageList" repeat-lazyload>
+                                                    <div class="photo lazy" data-original="{{photo.ACCESS_PATH}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell" ng-repeat="item in normal_report_data.recordList">
+                                    <div class="d-flex justify-content-start">{{item.OPERATE_TIME}}</div>
+                                    <div class="">{{item.NAME}}&nbsp;{{item.OPERATE_SUGGESTION}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_normalReport_btn btn btn-bg-theme color-white btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_NormalReport('上报项目管理员')">上报项目管理员</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_PROJADMIN'"><button type="button" class="submit_check_normalReport_btn btn btn-bg-theme color-white btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_NormalReport('提交主机厂')">上报主机厂</button></div>
+                        <!--<div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_normalReport_btn btn btn-bg-white color-red color-theme btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_NormalReport('退回')">退回</button></div>-->
+                    </div>
+                </div>
+            </div>
+            <!-- end 打卡确认时间 -->
+
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>

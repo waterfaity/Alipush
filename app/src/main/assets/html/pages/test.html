@@ -1,0 +1,91 @@
+<div class="container-fluid" id="container">
+    <div class="page test-page">
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <div class="workspace-panel">
+                <div>
+                    <h2>本地消息推送</h2>
+                    <button class="btn btn-primary btn-sm" id="ios-push-btn">启用</button>
+                    <div>&nbsp;</div>
+                    <br>
+                    <div>&nbsp;</div>
+                    <br>
+                    <div class="orc-panel"></div>
+                    <button class="btn btn-primary btn-sm" id="jsbridge-btn">jsbridge发送</button>
+                </div>
+                <div>
+                    <h2>拍照功能测试</h2>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-sm btn-photo"
+                                ng-click="photo_btn()">拍照
+                        </button>
+                    </div>
+
+
+                    <input id="photo_input" type="file" accept="image/*;" multiple capture="camera"
+                           class="hide">
+                    <canvas width="800" height="600" style="background-color: black"></canvas>
+                    <img class="test_img_content" src="" width="800">
+                    <p class="test_info_content"></p>
+                    <img class="test_img_content_compress" src="">
+                    <div>&nbsp;</div>
+                    <button type="button" class="btn btn-primary btn-sm btn-orc">识别文字</button>
+                    <div class="orc-panel"></div>
+                </div>
+                <div style="height: 20px;"></div>
+                <div>
+                    <h2>签名功能测试</h2>
+                    <div class="sign_panel"></div>
+                    <div>
+                        <button type="button" class="btn btn-secondary btn-sm btn-sign_clear">重写
+                        </button>
+                        <div>&nbsp;</div>
+                        <button type="button" class="btn btn-primary btn-sm btn-sign_create">提交
+                        </button>
+                    </div>
+                    <img class="sign_image" style="border: 1px red solid;width: 100%;">
+                </div>
+                <div>
+                    <h2>批量上传图片</h2>
+                    <input type="file" id="images_upload" name="images_upload" accept="image/*"
+                           multiple="multiple">
+                    <button type="button" class="btn btn-primary btn-sm btn-images_upload">上传
+                    </button>
+                </div>
+                <div>
+                    <h2>获取GPS坐标</h2>
+                    <button type="button" class="btn btn-primary btn-sm btn-gps"
+                            ng-click="getLocation()">获取GPS
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm btn-gps"
+                            ng-click="geocoder()">geocoder
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .test-page .workspace-wrapper{
+        position: absolute;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+    }
+    .test-page .workspace-panel{
+        height: 100vh;
+        max-height: 100vh;
+    }
+    .orc-panel{
+        border: 1px red solid;
+    }
+
+
+
+
+</style>
+

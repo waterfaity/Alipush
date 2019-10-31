@@ -1,0 +1,47 @@
+<div class="sidebar-wrapper" data-ng-init="sidebar_load()">
+    <div class="h-100 d-flex flex-column justify-content-between" style="overflow: auto;">
+        <ul class="sidebar-nav nav-pills nav-stacked">
+            <li class="sidebar-item avatar-item">
+                <div class="avatar" style="background-image: url(assets/logo/{{loginHeader.logoUrl}});" ng-click="sidebar_item_click($event, 'logo')"></div>
+            </li>
+            <li class="sidebar-item sidebar-item-today" ng-show="userinfo.role_code == 'ROLE_LS' || userinfo.role_code == 'ROLE_DD' || userinfo.role_code == 'ROLE_PROJADMIN'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'today')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.task > 0">{{sidebar_count.task}}</span><i class="icon-today"></i></span><p>今日任务</p></a>
+            </li>
+            <li class="sidebar-item sidebar-item-backlog" ng-show="userinfo.role_code == 'ROLE_LS' || userinfo.role_code == 'ROLE_DD' || userinfo.role_code == 'ROLE_PROJADMIN'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'backlog')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.backlog > 0">{{sidebar_count.backlog}}</span><i class="icon-backlog"></i></span><p>近期行程</p></a>
+            </li>
+            <li class="sidebar-item sidebar-item-completed" ng-show="userinfo.role_code == 'ROLE_LS' || userinfo.role_code == 'ROLE_DD' || userinfo.role_code == 'ROLE_PROJADMIN'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'completed')"><span class="icon"><i class="icon-done"></i></span><p>已完成</p></a>
+            </li>
+            <li class="sidebar-item sidebar-item-arrive" ng-show="userinfo.role_code == 'ROLE_DD'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'arrive')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.arrive > 0">{{sidebar_count.arrive}}</span><i class="icon-punch"></i></span><p>打卡确认</p></a>
+            </li>
+            <li class="sidebar-item sidebar-item-leave" ng-show="userinfo.role_code == 'ROLE_DD'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'leave')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.leave > 0">{{sidebar_count.leave}}</span><i class="icon-leave"></i></span><p>离店确认</p></a>
+            </li>
+            <li class="sidebar-item sidebar-item-put-exceptional" ng-show="userinfo.role_code == 'ROLE_DD' || userinfo.role_code == 'ROLE_PROJADMIN'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'put-exceptional')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.abnormal > 0">{{sidebar_count.abnormal}}</span><i class="icon-put-exceptional"></i></span><p>异常报备</p></a>
+            </li>
+            <li class="sidebar-item sidebar-item-put-normal" ng-show="userinfo.role_code == 'ROLE_DD' || userinfo.role_code == 'ROLE_PROJADMIN'">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'put-normal')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.normal > 0">{{sidebar_count.normal}}</span><i class="icon-put-normal"></i></span><p>普通报备</p></a>
+            </li>
+            <li class="sidebar-item"><div class="placeholder-block"></div></li>
+        </ul>
+        <ul class="sidebar-nav nav-pills nav-stacked">
+            <li class="sidebar-item sidebar-item-notice">
+                <a class="sidebar-link" ng-click="sidebar_item_click($event, 'notice')"><span class="icon"><span class="count-badge badge badge-notice" ng-if="sidebar_count.notice > 0">{{sidebar_count.notice}}</span><i class="icon-notice"></i></span></a>
+            </li>
+            <li class="sidebar-item sidebar-item-menu" ng-show="userinfo.role_code == 'ROLE_LS'">
+                <a class="sidebar-link" ng-click="photo_btn('sidebar')"><span class="icon"><i class="icon-photo"></i></span></a>
+                <div class="photos-tool">
+                    <input id="photo_input" type="file" accept="image/*;" multiple capture="camera" class="hide">
+                    <img class="croppable_img_content" src="" width="800">
+                    <img class="thumbnail_img_content" src="" width="120">
+                    <p class="test_info_content"></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="version_type" ng-class="version_type">测试版</div>
+    <div class="portrait-info"><div class="info">请将手机旋转，以横屏浏览</div></div>
+</div>

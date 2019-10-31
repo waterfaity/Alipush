@@ -1,0 +1,195 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container leaveTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- list -->
+        <div class="leave-wrapper list-wrapper task-list-wrapper">
+            <div class="list-header">
+                <div></div>
+                <div class="list-header-title">
+                    <div class="title">离店记录</div>
+                </div>
+                <div></div>
+            </div>
+            <div class="list-panel">
+                <div class="tab-paenl d-flex">
+                    <div class="tab tab-1 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray btn-bg-darkgray" ng-click="switch_check_leave()">未处理</div>
+                    <div class="tab tab-2 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray" ng-click="switch_uncheck_leave()">已处理</div>
+                </div>
+                <div class="position-relative">
+                    <div class="list-scroll list-scroll-long position-absolute w-100 unchecked_leave_list">
+                        <div class="list-item" ng-repeat="item in uncheckedLeaveList | orderBy:'leave_time'" ng-click="get_check_leave_data(item, 'unchecked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.door_photo}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                        	<div class="title">{{item.task_code}}</div>
+                                            <div class="title">{{item.agency_name}}</div>
+                                            <div class="address"><i class="icon icon-local"></i><span>{{item.address}}</span></div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.leave_time}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.teacher_name}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="uncheckedLeaveList_error_info">{{uncheckedLeaveList_error_info}}</p>
+                    </div>
+                    <div class="list-scroll position-absolute w-100 checked_leave_list hide">
+                        <div class="list-item" ng-repeat="item in checkedLeaveList | orderBy:'leave_time':reverse" ng-click="get_check_leave_data(item, 'checked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.door_photo}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                        	<div class="title">{{item.task_code}}</div>
+                                            <div class="title">{{item.agency_name}}</div>
+                                            <div class="address"><i class="icon icon-local"></i><span>{{item.address}}</span></div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.leave_time}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.teacher_name}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="checkedLeaveList_error_info">{{checkedLeaveList_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 离店确认时间 -->
+            <div class="task-leave-data-wrapper slide current-slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title" ng-if="checked == 'unchecked'">离店未处理（{{leave_data.leavedata.task_code}}）</div>
+                    <div class="title" ng-if="checked != 'unchecked'">离店已处理（{{leave_data.leavedata.task_code}}）</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{leave_data.leavedata.task_code}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{leave_data.leavedata.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{leave_data.leavedata.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{leave_data.leavedata.teacher_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">离店提交时间</div>
+                                    <div class="value">{{leave_data.leavedata.leave_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">问卷完整性</div>
+                                    <div class="value"><span ng-if="leave_data.leavedata.sq_status == 1">完整</span><span ng-if="leave_data.leavedata.sq_status == 0">不完整</span></div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">不符合项及经销商现场申诉</div>
+                                    <div class="value"><span class="badge badge-notice" ng-if="unqualifiedList.length > 0" style=" font-size: 14px; min-width: 22px; min-height: 22px; line-height: 16px; font-weight: 100;position: relative; right: 0; top: 0; "><span ng-if="unqualifiedList.length > 0">{{unqualifiedList.length}}</span></span><span ng-if="!unqualifiedList || unqualifiedList.length == 0">0</span></div>
+                                    <div class="enter_btn" ng-if="unqualifiedList.length > 0"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">名片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in leave_data.leaveimagelist" repeat-lazyload ng-if="image.type == '6'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">合影</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in leave_data.leaveimagelist" repeat-lazyload ng-if="image.type == '7'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">声明文件是否已阅读</div>
+                                    <div class="value"><div ng-if="leave_data.leavedata.readed == 0">已阅读</div><div ng-if="leave_data.leavedata.readed == 1">未阅读</div></div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">签名</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in leave_data.leaveimagelist" repeat-lazyload ng-if="image.type == '8'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells" ng-if="checked != 'unchecked'">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">处理结果</div>
+                                    <div class="value">{{leave_data.checkoutdatalist[0].operater_suggestion}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">督导</div>
+                                    <div class="value">{{leave_data.checkoutdatalist[0].name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">处理时间</div>
+                                    <div class="value">{{leave_data.checkoutdatalist[0].operater_time}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells" ng-if="checked == 'unchecked'"><button type="button" class="submit_check_leave_btn btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_leave('0')">确认</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked'"><button type="button" class="submit_check_leave_btn btn btn-bg-white color-red btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_leave('1')">退回</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 离店确认时间 -->
+
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>

@@ -1,0 +1,11 @@
+<div class="photos-panel">
+    <div class="photos-list">
+        <div class="image-panel" ng-repeat="item in photos_orderby_list | orderBy: 'photo.order'">
+            <div class="box">
+                <div class="photo-box"><div class="photo" style="background-image: url({{item.photo}})" data-name="{{item.id}}" ng-click="photo_preview_open($event)"></div></div>
+                <button type="button" class="btn btn-sm remove_photo_btn" ng-click="remove_select_photos_btn(item.id);" ng-hide="photos_active.indexOf(item.id) >= 0"></button>
+                <div class="check-photo-btn" ng-show="select_photos_check" ng-click="check_photos_btn($event)"><i class="icon-normal"></i></div>
+            </div>
+        </div>
+    </div>
+</div>

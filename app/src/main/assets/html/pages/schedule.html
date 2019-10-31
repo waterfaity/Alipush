@@ -1,0 +1,72 @@
+<div class="pages-content">
+    <div class="header schedule-header d-flex justify-content-between">
+        <div class="avatar-panel">
+            <div class="avatar"></div>
+            <p>当前用户：{{userinfo.name}}</p>
+        </div>
+        <div class="title"></div>
+        <div class="back-btn" ng-click="go('/login')"><span>返回登录&nbsp;</span><i class="icon-back"></i></div>
+    </div>
+    <div class="container-fluid" id="container">
+        <div class="page schedule-page d-flex justify-content-center" data-page="schedule">
+            <div>
+                <div class="title">{{taskTitle}}</div>
+                <div class="time">{{scheduleData}}</div>
+                <div class="schedule-table">
+                    <table class="head-table">
+                            <tr>
+                                <td colspan="2">项目名称</td>
+                                <td colspan="2">计划检查</td>
+                                <td colspan="2">尚未检查</td>
+                                <td colspan="2">已检查</td>
+                                <td colspan="2">正常店</td>
+                                <td colspan="2">异常店</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" rowspan="2" valign="top"><div class="icon"><i class="icon-project"></i></div></td>
+                                <td colspan="2" valign="top"><div class="icon"><i class="icon-plan"></i></div></td>
+                                <td colspan="2" valign="top"><div class="icon"><i class="icon-list"></i></div></td>
+                                <td colspan="2" valign="top"><div class="icon"><i class="icon-finish"></i></div></td>
+                                <td colspan="2" valign="top"><div class="icon"><i class="icon-normal"></i></div></td>
+                                <td colspan="2" valign="top"><div class="icon"><i class="icon-unnormal"></i></div></td>
+                            </tr>
+                            <tr>
+                                <td>总数</td>
+                                <td>今天</td>
+                                <td>总数</td>
+                                <td>今天</td>
+                                <td>总数</td>
+                                <td>今天</td>
+                                <td colspan="2">总数</td>
+                                <td colspan="2">总数</td>
+                            </tr>
+                    </table>
+                    <div class="body-table-panel">
+                        <table class="body-table">
+                            <tr ng-repeat="project in scheduleList">
+                                <td colspan="2" class="text-center" data-id="{{project.proj_id}}" ng-show="project.proj_name=='总计'">
+                                    <div class="proj_name d-flex justify-content-start align-items-center">{{project.proj_name}}</div>
+                                </td>
+                                <td colspan="2" class="text-center" data-id="{{project.proj_id}}" ng-show="project.proj_name!='总计'" ng-click="gotoHomePage($index, project.proj_id)">
+                                    <div class="proj_name d-flex justify-content-start align-items-center">{{project.proj_name}}</div>
+                                </td>
+                                <td>{{project.totalCount}}</td>
+                                <td>{{project.todayCount}}</td>
+                                <td>{{project.notyetTotalCount}}</td>
+                                <td>{{project.notyetTodayCount}}</td>
+                                <td>{{project.finishTotalCount}}</td>
+                                <td>{{project.finishTodayCount}}</td>
+                                <td colspan="2">{{project.normalTotalCount}}</td>
+                                <td colspan="2">{{project.unNormalTotalCount}}</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="12" valign="top">（点击项目名称进入项目）</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

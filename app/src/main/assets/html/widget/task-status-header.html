@@ -1,0 +1,29 @@
+<div class="d-flex justify-content-start align-items-center" style=" flex-grow: 1; ">
+    <div class="" style=" flex-grow: 0; ">
+        <div class="item-avatar" style="background-image: url({{task_detail.DOOR_PHOTO}})" ng-click="photo_preview_open($event)"></div>
+    </div>
+    <div class="d-flex justify-content-start flex-column" style=" flex-grow: 1; ">
+        <div class="d-flex justify-content-start text-center">
+            <div class="questionnaire-header-item">
+                <div class="icon p-2"><span class="icon-abnormal" style="color: #ff3d3d;" ng-show="task_detail.STATUS == 0"></span><span class="icon-abnormal" ng-show="task_detail.STATUS == 1"></span></div>
+                <div class="item-title">正常检查/异常检查</div>
+                <div class="item-value"><span ng-show="task_detail.STATUS == 0" style="color: #ff3d3d;">异常</span><span ng-show="task_detail.STATUS == 1">正常</span></div>
+            </div>
+            <div class="questionnaire-header-item">
+                <div class="icon p-2"><span class="icon-percent"></span></div>
+                <div class="item-title">完成比例</div>
+                <div class="item-value">{{task_detail.progress}}%（{{task_detail.FINISHEDCOUNT}} / {{task_detail.TOTALCOUNT}}）</div>
+            </div>
+            <div class="questionnaire-header-item">
+                <div class="icon p-2"><span class="icon-exempt" ng-show="task_detail.EXEMPT_COUNT == 0"></span><span class="icon-exempt" ng-show="task_detail.EXEMPT_COUNT > 0" style="color: #ff3d3d;"></span></div>
+                <div class="item-title">免检数</div>
+                <div class="item-value"><span ng-show="task_detail.EXEMPT_COUNT == 0">{{task_detail.EXEMPT_COUNT}}</span><span ng-show="task_detail.EXEMPT_COUNT > 0" style="color: #ff3d3d;">{{task_detail.EXEMPT_COUNT}}</span></div>
+            </div>
+            <div class="questionnaire-header-item">
+                <div class="icon p-2"><span class="icon-today" ng-show="task_detail.AGENCYRECORDCOUNT == 0"></span><span class="icon-today" ng-show="task_detail.AGENCYRECORDCOUNT > 0" style="color: #ff3d3d;"></span></div>
+                <div class="item-title">经销商报备数</div>
+                <div class="item-value"><span ng-show="task_detail.AGENCYRECORDCOUNT == 0">{{task_detail.AGENCYRECORDCOUNT}}</span><span ng-show="task_detail.AGENCYRECORDCOUNT > 0" style="color: #ff3d3d;">{{task_detail.AGENCYRECORDCOUNT}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>

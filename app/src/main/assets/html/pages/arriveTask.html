@@ -1,0 +1,185 @@
+<div class="container-fluid" id="container">
+    <div class="page page-container arriveTask-page color-theme-{{project_switch_id}}">
+
+        <!-- sidebar -->
+        <div ng-include="'widget/sidebar.html'"></div>
+
+        <!-- list -->
+        <div class="arrive-wrapper list-wrapper task-list-wrapper">
+            <div class="list-header">
+                <div></div>
+                <div class="list-header-title">
+                    <div class="title">打卡记录</div>
+                </div>
+                <div></div>
+            </div>
+            <div class="list-panel">
+                <div class="tab-paenl d-flex">
+                    <div class="tab tab-1 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray btn-bg-darkgray" ng-click="switch_check_arrive()">未处理</div>
+                    <div class="tab tab-2 px-4 py-2 text-center flex-grow-1 border-bottom-darkgray" ng-click="switch_uncheck_arrive()">已处理</div>
+                </div>
+                <div class="position-relative">
+                    <div class="list-scroll list-scroll-long position-absolute w-100 unchecked_arrive_list">
+                        <div class="list-item" ng-repeat="item in uncheckedArriveList | orderBy:'MARK_TIME'" ng-click="get_check_arrive_data(item, 'unchecked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.DOOR_PHOTO}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                        	<div class="title">{{item.TASK_CODE}}</div>
+                                            <div class="title">{{item.AGENCY_NAME}}</div>
+                                            <div class="address"><i class="icon icon-local"></i><span>{{item.ADDRESS}}</span></div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.MARK_TIME}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.TEACHER_NAME}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="uncheckedArriveList_error_info">{{uncheckedArriveList_error_info}}</p>
+                    </div>
+                    <div class="list-scroll position-absolute w-100 checked_arrive_list hide">
+                        <div class="list-item" ng-repeat="item in checkedArriveList | orderBy:'MARK_TIME':true" ng-click="get_check_arrive_data(item, 'checked', $event)" data-item="{{item}}">
+                            <div class="task-item-head">
+                                <div class="d-flex">
+                                    <div class="left-panel">
+                                        <div class="task-item-avatar" style="background-image: url({{item.DOOR_PHOTO}})"></div>
+                                    </div>
+                                    <div class="right-panel">
+                                        <div class="w-100">
+                                        	<div class="title">{{item.TASK_CODE}}</div>
+                                            <div class="title">{{item.AGENCY_NAME}}</div>
+                                            <div class="address"><i class="icon icon-local"></i><span>{{item.ADDRESS}}</span></div>
+                                            <div class="date-owner-box">
+                                                <div class="date"><i class="icon icon-clock"></i><span>{{item.MARK_TIME}}</span></div>
+                                                <div class="owner"><i class="icon icon-teacher"></i><span>{{item.TEACHER_NAME}}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="error_info" ng-if="checkedArriveList_error_info">{{checkedArriveList_error_info}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- workspace -->
+        <div class="workspace-wrapper">
+            <!-- 打卡确认时间 -->
+            <div class="task-arrive-data-wrapper slide current-slide hide">
+                <div class="workspace-header">
+                    <div class="header-placeholder"></div>
+                    <div class="title" ng-if="checked == 'unchecked'">打卡未处理（{{arrive_data.arrivedata.task_code}}）</div>
+                    <div class="title" ng-if="checked != 'unchecked'">打卡已处理（{{arrive_data.arrivedata.task_code}}）</div>
+                    <div class="header-placeholder"></div>
+                </div>
+                <div class="workspace-panel">
+                    <div class="workspace-panel-body">
+                        <div class="cells">
+                            <div class="cell-body">
+                            	<div class="cell">
+                                    <div class="title">任务编号</div>
+                                    <div class="value">{{arrive_data.arrivedata.task_code}}</div>
+                                </div>
+                            	<div class="cell">
+                                    <div class="title">任务日期</div>
+                                    <div class="value">{{arrive_data.arrivedata.plan_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商名称</div>
+                                    <div class="value">{{arrive_data.arrivedata.agency_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">巡检老师</div>
+                                    <div class="value">{{arrive_data.arrivedata.teacher_name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡提交时间</div>
+                                    <div class="value">{{arrive_data.arrivedata.mark_time}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡地点</div>
+                                    <div class="value">{{arrive_data.arrivedata.address}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">经销商坐标</div>
+                                    <div class="value">{{arrive_data.arrivedata.agency_longitude}}, {{arrive_data.arrivedata.agency_latitude}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">打卡坐标</div>
+                                    <div class="value">{{arrive_data.arrivedata.longitude}}, {{arrive_data.arrivedata.latitude}}</div>
+                                </div>
+                                <div class="cell">
+                                	<div class="title">GPS地图</div><br>
+                                    <div class="" ng-repeat="image in arrive_data.arriveimagelist" repeat-lazyload ng-if="image.type == '12'"><img id="arriveMapImage" class="lazy" src="assets/icon/loading.gif" data-original="{{image.access_path}}" ng-click="photo_preview_open($event)" height="62"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cells">
+                            <div class="cell-body">
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">交通工具照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in arrive_data.arriveimagelist" repeat-lazyload ng-if="image.type == '0'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell photos-thumb-cell pr-0">
+                                    <div class="photos-thumb-title">门口照片</div>
+                                    <div class="photos-thumb-panel">
+                                        <div class="photos-thumb-scroll">
+                                            <div class="photos-thumb">
+                                                <div class="photo-box" ng-repeat="(key, image) in arrive_data.arriveimagelist" repeat-lazyload ng-if="image.type == '1'">
+                                                    <div class="photo lazy" data-original="{{image.access_path}}" style="background-image: url(assets/icon/loading.gif)" data-name="{{key}}" ng-click="photo_preview_open($event)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="cell">
+                                    <div class="title">打卡备注</div>
+                                    <div class="value">{{arrive_data.arrivedata.remark}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells" ng-if="checked != 'unchecked'">
+                            <div class="cell-body">
+                                <div class="cell">
+                                    <div class="title">处理结果</div>
+                                    <div class="value">{{arrive_data.checkindatalist[0].operater_suggestion}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">督导</div>
+                                    <div class="value">{{arrive_data.checkindatalist[0].name}}</div>
+                                </div>
+                                <div class="cell">
+                                    <div class="title">处理时间</div>
+                                    <div class="value">{{arrive_data.checkindatalist[0].operater_time}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_arrive_btn btn btn-bg-theme btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_Arrive('0')">同意</button></div>
+                        <div class="cells" ng-if="checked == 'unchecked' && userinfo.role_code == 'ROLE_DD'"><button type="button" class="submit_check_arrive_btn btn btn-bg-white color-red btn-sm w100-btn mt-0 mb-2" ng-click="submit_check_Arrive('1')">退回</button></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end 打卡确认时间 -->
+
+        </div>
+    </div>
+</div>
+
+<div ng-include="'widget/photo-preview.html'"></div>

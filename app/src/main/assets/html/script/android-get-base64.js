@@ -6,5 +6,5 @@
             //调用msg变量，并改变msg的值
             $scope.receiveBase64StrData(json);
             //上一行改变了msg的值，如果想同步到Angular控制器中，则需要调用$apply()方法即可
-            $scope.$apply();
+//            $scope.$apply();
     }

@@ -466,13 +466,17 @@ angular.module('myApp.controllers', [])
 
 
         $scope.receiveBase64StrData = function (json) {
-            //①接收到Android传递过来的json信息
-            var base64Str = json.base64EncodeImgStr;
 
-            var base64 = new Base64();
-            var onject = base64.decode(base64Str);
-            onject = onject.replace(/[\r\n]/g, "");
-            document.getElementById("photo_input").src = "data:image/jpeg;base64," + onject;
+            alert(json)
+
+//            //①接收到Android传递过来的json信息
+//            var base64Str = json.base64EncodeImgStr;
+//
+//
+//            var base64 = new Base64();
+//            var onject = base64.decode(base64Str);
+//            onject = onject.replace(/[\r\n]/g, "");
+//            document.getElementById("photo_input").src = "data:image/jpeg;base64," + onject;
 
         };
 
